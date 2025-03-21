@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="css/destyle.css">
   <link rel="stylesheet" href="css/style.css">
-  <script src="script.js"></script>
+  <script type="module" src="js/index.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>簡易掲示板</title>
 </head>
@@ -17,28 +17,12 @@
       <h2>テーマ：雑談</h2>
     </div>
     <div>
-      <textarea name="comment" placeholder="話したいことを入力"></textarea>
-      <p><input type="submit" value="書き込む"></p>
+      <textarea name="comment" id="commentInput" placeholder="話したいことを入力"></textarea>
+      <p><input type="submit" value="書き込む" id="postButton"></p>
     </div>
     <div class="separator"></div>
     <div class="posts">
-      <ul id="postList">
-        <li>
-          <span>3:</span>
-          <span>書き込みされた00000000000000000000003</span>
-          <input type="button" value="削除" class="deleteButton">
-        </li>
-        <li>
-          <span>2:</span>
-          <span>書き込みされた00000000000000000000002</span>
-          <input type="button" value="削除" class="deleteButton">
-        </li>
-        <li>
-          <span>1:</span>
-          <span>書き込みされた00000000000000000000001</span>
-          <input type="button" value="削除" class="deleteButton">
-        </li>
-      </ul>
+      <ul id="postList"></ul>
     </div>
   </main>
   <footer></footer>
