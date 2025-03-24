@@ -18,7 +18,7 @@ export class PostManager {
     return maxNum + 1;
   }
 
-  saveComment(){
+  createComment(){
     const comment = this.commentInput.value.trim();
     if(!comment) return;
     const postNum = this.getPostNumber();
@@ -72,7 +72,7 @@ export class PostManager {
 
   setupEventListeners(){
     this.postButton.addEventListener("click", () => {
-      this.saveComment();
+      this.createComment();
     });
 
     this.postList.addEventListener("click", e => {
