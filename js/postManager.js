@@ -1,45 +1,34 @@
 export class PostManager {
-  constructor(postListId, commentInputId, postButtonId){
+  constructor(postListId, commentInputId, postButtonId, postRepository){
     this.postList = document.getElementById(postListId);
     this.commentInput = document.getElementById(commentInputId);
     this.postButton = document.getElementById(postButtonId);
+    this.postRepository = postRepository;
+    this.counterKey = this.postRepository.counterKey;
+    this.commentPrefix = this.postRepository.commentPrefix;
 
     this.loadAllPosts();
     this.setupEventListeners();
   }
 
-  getPostNumber(){
-    const counterKey = "comment_counter";
-    const counterNum = parseInt(localStorage.getItem(counterKey) || "0", 10);
-    const currentNum = counterNum + 1;
-    localStorage.setItem(counterKey, currentNum);
-    return currentNum;
-  }
-
   createComment(){
     const comment = this.commentInput.value.trim();
     if(!comment) return;
-    const postNum = this.getPostNumber();
-    const postKey = `comment_num_${postNum}`;
-    localStorage.setItem(postKey, comment);
-    const createdComment = localStorage.getItem(postKey);
-    this.addPostToList(postKey, createdComment);
+    const postKey = this.postRepository.addComment(comment);
+    const createdComment = this.postRepository.getComment(postKey);
+    const postNum = this.postRepository.getPostNumberFromKey(postKey);
+    this.addPostToList(postKey, createdComment, postNum);
     this.commentInput.value = "";
   }
 
   deleteComment(postKey, liElement){
-    localStorage.removeItem(postKey);
+    this.postRepository.deleteComment(postKey);
     liElement.remove();
 
-    const hasOtherComments = Object.keys(localStorage).some(key => key.startsWith("comment_num_"));
-    if(!hasOtherComments){
-      localStorage.removeItem("comment_counter");
-    }
+    this.postRepository.clearCounterIfNoComments();
   }
 
-  addPostToList(key, comment){
-    const postNum = parseInt(key.replace("comment_num_", ""), 10);
-
+  addPostToList(key, comment, postNum){
     const li = document.createElement('li');
   
     const spanKey = document.createElement('span');
@@ -62,22 +51,12 @@ export class PostManager {
   }
 
   loadAllPosts(){
-    const posts = [];
-    for(let i = 0; i <= localStorage.length; i++){
-      const postKey = localStorage.key(i);
-      if(postKey && postKey.startsWith("comment_num_")){
-        const comment = localStorage.getItem(postKey);
-        posts.push({ postKey, comment });
-      }
+    const posts = this.postRepository.getAllPosts();
+    if(posts){
+      posts.forEach( post => {
+        this.addPostToList(post.postKey, post.comment, post.postNum);
+      });
     }
-    posts.sort((a,b) => {
-      const numA = parseInt(a.postKey.replace("comment_num_", ""), 10);
-      const numB = parseInt(b.postKey.replace("comment_num_", ""), 10);
-      return numA - numB;
-    });
-    posts.forEach( post => {
-      this.addPostToList(post.postKey, post.comment);
-    });
   }
 
   setupEventListeners(){
