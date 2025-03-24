@@ -9,35 +9,41 @@ export class PostManager {
   }
 
   getPostNumber(){
-    let maxNum = 0;
-    for(let key in localStorage){
-      if(!isNaN(key)){
-        maxNum = Math.max(maxNum, parseInt(key));
-      }
-    }
-    return maxNum + 1;
+    const counterKey = "comment_counter";
+    const counterNum = parseInt(localStorage.getItem(counterKey) || "0", 10);
+    const currentNum = counterNum + 1;
+    localStorage.setItem(counterKey, currentNum);
+    return currentNum;
   }
 
   createComment(){
     const comment = this.commentInput.value.trim();
     if(!comment) return;
     const postNum = this.getPostNumber();
-    localStorage.setItem(postNum, comment);
-    const savedComment = localStorage.getItem(postNum);
-    this.addPostToList(postNum, savedComment);
+    const postKey = `comment_num_${postNum}`;
+    localStorage.setItem(postKey, comment);
+    const createdComment = localStorage.getItem(postKey);
+    this.addPostToList(postKey, createdComment);
     this.commentInput.value = "";
   }
 
   deleteComment(postKey, liElement){
     localStorage.removeItem(postKey);
     liElement.remove();
+
+    const hasOtherComments = Object.keys(localStorage).some(key => key.startsWith("comment_num_"));
+    if(!hasOtherComments){
+      localStorage.removeItem("comment_counter");
+    }
   }
 
   addPostToList(key, comment){
+    const postNum = parseInt(key.replace("comment_num_", ""), 10);
+
     const li = document.createElement('li');
   
     const spanKey = document.createElement('span');
-    spanKey.textContent = `${key}:`;
+    spanKey.textContent = `${postNum}:`;
     
     const spanComment = document.createElement('span');
     spanComment.textContent = comment;
@@ -56,17 +62,21 @@ export class PostManager {
   }
 
   loadAllPosts(){
-    const postKeys = [];
-    for(let i = 0; i < localStorage.length; i++){
+    const posts = [];
+    for(let i = 0; i <= localStorage.length; i++){
       const postKey = localStorage.key(i);
-      if(!isNaN(postKey)){
-        postKeys.push(parseInt(postKey));
+      if(postKey && postKey.startsWith("comment_num_")){
+        const comment = localStorage.getItem(postKey);
+        posts.push({ postKey, comment });
       }
     }
-    postKeys.sort((a,b) => a - b);
-    postKeys.forEach( postKey => {
-      const comment = localStorage.getItem(postKey);
-      this.addPostToList(postKey, comment);
+    posts.sort((a,b) => {
+      const numA = parseInt(a.postKey.replace("comment_num_", ""), 10);
+      const numB = parseInt(b.postKey.replace("comment_num_", ""), 10);
+      return numA - numB;
+    });
+    posts.forEach( post => {
+      this.addPostToList(post.postKey, post.comment);
     });
   }
 
