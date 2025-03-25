@@ -32,11 +32,12 @@ export class PostRepository {
     localStorage.removeItem(key);
   }
 
-  clearCounterIfNoComments(){
-    const hasComments = Object.keys(localStorage).some(key => key.startsWith(this.#config.commentPrefix));
-    if(!hasComments){
-      localStorage.removeItem(this.#config.counterKey);
-    }
+  clearCounter(){
+    localStorage.removeItem(this.#config.counterKey);
+  }
+
+  hasComments(){
+    return Object.keys(localStorage).some(key => key.startsWith(this.#config.commentPrefix));
   }
 
   getPostNumberFromKey(key){

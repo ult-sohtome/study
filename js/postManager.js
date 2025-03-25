@@ -24,8 +24,9 @@ export class PostManager {
   deleteComment(postKey, liElement){
     this.postRepository.deleteComment(postKey);
     liElement.remove();
-
-    this.postRepository.clearCounterIfNoComments();
+    if(!this.postRepository.hasComments()){
+      this.postRepository.clearCounter();
+    }
   }
 
   addPostToList(key, comment, postNum){
