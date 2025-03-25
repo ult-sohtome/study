@@ -1,14 +1,18 @@
 export class PostRepository {
-  constructor(counterKey, commentPrefix){
-    this.counterKey = counterKey;
-    this.commentPrefix = commentPrefix;
+  #config;
+
+  constructor(){
+    this.#config = Object.freeze({
+      counterKey: "comment_counter",
+      commentPrefix: "comment_num_"
+    });
   }
   
   addComment(comment){
-    const count = parseInt(localStorage.getItem(this.counterKey) || "0", 10) + 1;
-    const postKey = this.commentPrefix + count;
+    const count = parseInt(localStorage.getItem(this.#config.counterKey) || "0", 10) + 1;
+    const postKey = this.#config.commentPrefix + count;
     localStorage.setItem(postKey, comment);
-    localStorage.setItem(this.counterKey, count);
+    localStorage.setItem(this.#config.counterKey, count);
     return postKey;
   }
 
@@ -21,21 +25,21 @@ export class PostRepository {
   }
 
   clearCounterIfNoComments(){
-    const hasComments = Object.keys(localStorage).some(key => key.startsWith(this.commentPrefix));
+    const hasComments = Object.keys(localStorage).some(key => key.startsWith(this.#config.commentPrefix));
     if(!hasComments){
-      localStorage.removeItem(this.counterKey);
+      localStorage.removeItem(this.#config.counterKey);
     }
   }
 
   getPostNumberFromKey(key){
-    return parseInt(key.replace(this.commentPrefix, ""), 10);
+    return parseInt(key.replace(this.#config.commentPrefix, ""), 10);
   }
 
   getAllPosts(){
     const posts = [];
     for(let i = 0; i < localStorage.length; i++){
       const postKey = localStorage.key(i);
-      if(postKey && postKey.startsWith(this.commentPrefix)){
+      if(postKey && postKey.startsWith(this.#config.commentPrefix)){
         const comment = this.getComment(postKey);
         const postNum = this.getPostNumberFromKey(postKey);
         posts.push({ postKey, comment, postNum });

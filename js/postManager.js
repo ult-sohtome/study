@@ -4,8 +4,6 @@ export class PostManager {
     this.commentInput = document.getElementById(commentInputId);
     this.postButton = document.getElementById(postButtonId);
     this.postRepository = postRepository;
-    this.counterKey = this.postRepository.counterKey;
-    this.commentPrefix = this.postRepository.commentPrefix;
 
     this.loadAllPosts();
     this.setupEventListeners();
