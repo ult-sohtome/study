@@ -9,7 +9,7 @@ export class PostRepository {
   }
   
   getCurrentCount(){
-    return localStorage.getItem(this.#config.counterKey) || "0";
+    return parseInt(localStorage.getItem(this.#config.counterKey) || "0", 10);
   }
 
   getPostKey(count){
@@ -18,7 +18,7 @@ export class PostRepository {
 
   addComment(comment){
     const currentCount = this.getCurrentCount();
-    const nextCount = parseInt(currentCount, 10) + 1;
+    const nextCount = currentCount + 1;
     const postKey = this.getPostKey(nextCount);
     localStorage.setItem(postKey, comment);
     localStorage.setItem(this.#config.counterKey, nextCount);
