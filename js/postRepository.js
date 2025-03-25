@@ -8,12 +8,20 @@ export class PostRepository {
     });
   }
   
+  getCurrentCount(){
+    return localStorage.getItem(this.#config.counterKey) || "0";
+  }
+
+  getPostKey(count){
+    return this.#config.commentPrefix + count;
+  }
+
   addComment(comment){
-    const count = parseInt(localStorage.getItem(this.#config.counterKey) || "0", 10) + 1;
-    const postKey = this.#config.commentPrefix + count;
+    const currentCount = this.getCurrentCount();
+    const nextCount = parseInt(currentCount, 10) + 1;
+    const postKey = this.getPostKey(nextCount);
     localStorage.setItem(postKey, comment);
-    localStorage.setItem(this.#config.counterKey, count);
-    return postKey;
+    localStorage.setItem(this.#config.counterKey, nextCount);
   }
 
   getComment(key){

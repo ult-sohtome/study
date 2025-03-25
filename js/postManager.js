@@ -12,7 +12,9 @@ export class PostManager {
   createComment(){
     const comment = this.commentInput.value.trim();
     if(!comment) return;
-    const postKey = this.postRepository.addComment(comment);
+    this.postRepository.addComment(comment);
+    const currentCount = this.postRepository.getCurrentCount();
+    const postKey = this.postRepository.getPostKey(currentCount);
     const createdComment = this.postRepository.getComment(postKey);
     const postNum = this.postRepository.getPostNumberFromKey(postKey);
     this.addPostToList(postKey, createdComment, postNum);
