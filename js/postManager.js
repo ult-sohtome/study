@@ -1,23 +1,37 @@
 export class PostManager {
-  constructor(postListId, commentInputId, postButtonId, postRepository){
+  constructor(postListId, commentInputId, postButtonId, prevId, paginateId, nextId, postRepository){
     this.postList = document.getElementById(postListId);
     this.commentInput = document.getElementById(commentInputId);
     this.postButton = document.getElementById(postButtonId);
+    this.prevButton = document.getElementById(prevId);
+    this.paginateButton = document.getElementById(paginateId);
+    this.nextButton = document.getElementById(nextId);
+    this.active = "active";
+    this.itemsPerPage = 5;
     this.postRepository = postRepository;
-
-    this.loadAllPosts();
+    this.allPosts = this.postRepository.getAllPosts();
+    this.currentPage = this.totalPages();
+    this.renderPagination();
+    this.setActivePage(this.currentPage);
+    this.loadAllPosts(this.currentPage);
+    this.disabledButton();
     this.setupEventListeners();
+  }
+
+  totalPages(){
+    return Math.max(1, Math.ceil(this.allPosts.length / this.itemsPerPage));
   }
 
   createComment(){
     const comment = this.commentInput.value.trim();
     if(!comment) return;
     this.postRepository.addComment(comment);
-    const currentCount = this.postRepository.getCurrentCount();
-    const postKey = this.postRepository.getPostKey(currentCount);
-    const createdComment = this.postRepository.getComment(postKey);
-    const postNum = this.postRepository.getPostNumberFromKey(postKey);
-    this.addPostToList(postKey, createdComment, postNum);
+    this.allPosts = this.postRepository.getAllPosts();
+    const totalPages = this.totalPages();
+    this.renderPagination();
+    this.setActivePage(totalPages);
+    this.loadAllPosts(totalPages);
+    this.disabledButton();
     this.commentInput.value = "";
   }
 
@@ -27,6 +41,15 @@ export class PostManager {
     if(!this.postRepository.hasComments()){
       this.postRepository.clearCounter();
     }
+    this.allPosts = this.postRepository.getAllPosts();
+    this.renderPagination();
+    const totalPages = this.totalPages();
+    if(this.currentPage > totalPages) {
+      this.currentPage = totalPages;
+    }
+    this.setActivePage(this.currentPage);
+    this.loadAllPosts(this.currentPage);
+    this.disabledButton();
   }
 
   addPostToList(key, comment, postNum){
@@ -53,13 +76,41 @@ export class PostManager {
     this.postList.insertBefore(li, this.postList.firstChild);
   }
 
-  loadAllPosts(){
-    const posts = this.postRepository.getAllPosts();
-    if(posts){
-      posts.forEach( post => {
-        this.addPostToList(post.postKey, post.comment, post.postNum);
-      });
+  loadAllPosts(page){
+    this.currentPage = page;
+    this.postList.innerHTML = "";
+    const startPost = (page - 1) * this.itemsPerPage;
+    const endPost = startPost + this.itemsPerPage;
+    const paginatedPosts = this.allPosts.slice(startPost, endPost);
+    paginatedPosts.forEach( post => {
+      this.addPostToList(post.postKey, post.comment, post.postNum);
+    });
+  }
+
+  disabledButton(){
+    const totalPages = this.totalPages();
+    this.prevButton.disabled = this.currentPage === 1;
+    this.nextButton.disabled = this.currentPage === totalPages;
+  }
+
+  renderPagination(){
+    this.paginateButton.innerHTML = "";
+    const totalPages = this.totalPages();
+    for(let i = 1; i <= totalPages; i++){
+      const pageButton = document.createElement("button");
+      pageButton.textContent = i;
+      this.paginateButton.appendChild(pageButton);
     }
+  }
+
+  setActivePage(page){
+    const allPageButtons = this.paginateButton.querySelectorAll("button");
+    allPageButtons.forEach(btn => btn.classList.remove(this.active));
+    const targetBtn = this.paginateButton.querySelectorAll("button")[page - 1];
+    if(targetBtn){
+      targetBtn.classList.add(this.active);
+    }
+    this.currentPage = page;
   }
 
   setupEventListeners(){
@@ -75,6 +126,31 @@ export class PostManager {
         if(postKey && li){
           this.deleteComment(postKey, li);
         }
+      }
+    });
+
+    this.paginateButton.addEventListener("click", e => {
+      if(e.target.tagName !== "BUTTON") return;
+      const selectedPage = parseInt(e.target.textContent);
+      this.setActivePage(selectedPage);
+      this.loadAllPosts(selectedPage);
+      this.disabledButton();
+    });
+
+    this.prevButton.addEventListener("click", () => {
+      if(this.currentPage > 1){
+        this.setActivePage(this.currentPage - 1);
+        this.loadAllPosts(this.currentPage);
+        this.disabledButton();
+      }
+    });
+  
+    this.nextButton.addEventListener("click", () => {
+      const totalPages = this.totalPages();
+      if(this.currentPage < totalPages){
+        this.setActivePage(this.currentPage + 1);
+        this.loadAllPosts(this.currentPage);
+        this.disabledButton();
       }
     });
   }
