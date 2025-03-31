@@ -31,6 +31,7 @@ export class PostManager {
 
   addPostToList(key, comment, postNum){
     const li = document.createElement('li');
+    const span = document.createElement('span');
   
     const spanKey = document.createElement('span');
     spanKey.textContent = `${postNum}:`;
@@ -44,8 +45,9 @@ export class PostManager {
     deleteButton.className = 'deleteButton';
     deleteButton.setAttribute("data-key", key);
   
-    li.appendChild(spanKey);
-    li.appendChild(spanComment);
+    span.appendChild(spanKey);
+    span.appendChild(spanComment);
+    li.appendChild(span);
     li.appendChild(deleteButton);
   
     this.postList.insertBefore(li, this.postList.firstChild);
