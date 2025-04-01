@@ -1,9 +1,6 @@
 import { PostManager } from './postManager.js';
-import { PostRepository } from "./postRepository.js";
 
 document.addEventListener("DOMContentLoaded", ()=>{
-  const postRepository = new PostRepository();
-
   const htmlIds = {
     postListId: "postList",
     commentInputId: "commentInput",
@@ -12,5 +9,5 @@ document.addEventListener("DOMContentLoaded", ()=>{
     paginateId: "pagination",
     nextButtonId: "nextBtn"
   };
-  new PostManager(htmlIds, postRepository);
+  new PostManager(htmlIds);
 });
