@@ -3,5 +3,14 @@ import { PostRepository } from "./postRepository.js";
 
 document.addEventListener("DOMContentLoaded", ()=>{
   const postRepository = new PostRepository();
-  new PostManager("postList", "commentInput", "postButton", "prevBtn", "pagination", "nextBtn", postRepository);
+
+  const htmlIds = {
+    postListId: "postList",
+    commentInputId: "commentInput",
+    postButtonId: "postButton",
+    prevButtonId: "prevBtn",
+    paginateId: "pagination",
+    nextButtonId: "nextBtn"
+  };
+  new PostManager(htmlIds, postRepository);
 });

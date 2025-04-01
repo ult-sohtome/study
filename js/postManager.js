@@ -1,11 +1,11 @@
 export class PostManager {
-  constructor(postListId, commentInputId, postButtonId, prevId, paginateId, nextId, postRepository){
-    this.postList = document.getElementById(postListId);
-    this.commentInput = document.getElementById(commentInputId);
-    this.postButton = document.getElementById(postButtonId);
-    this.prevButton = document.getElementById(prevId);
-    this.pagination = document.getElementById(paginateId);
-    this.nextButton = document.getElementById(nextId);
+  constructor(htmlIds, postRepository){
+    this.postList = document.getElementById(htmlIds.postListId);
+    this.commentInput = document.getElementById(htmlIds.commentInputId);
+    this.postButton = document.getElementById(htmlIds.postButtonId);
+    this.prevButton = document.getElementById(htmlIds.prevButtonId);
+    this.pagination = document.getElementById(htmlIds.paginateId);
+    this.nextButton = document.getElementById(htmlIds.nextButtonId);
     this.ACTIVE_CLASS = Object.freeze("active");
     this.ITEM_PER_PAGE = Object.freeze(5);
     this.postRepository = postRepository;
