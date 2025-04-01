@@ -4,22 +4,22 @@ export class PostManager {
     this.commentInput = document.getElementById(commentInputId);
     this.postButton = document.getElementById(postButtonId);
     this.prevButton = document.getElementById(prevId);
-    this.paginateButton = document.getElementById(paginateId);
+    this.pagination = document.getElementById(paginateId);
     this.nextButton = document.getElementById(nextId);
-    this.active = "active";
-    this.itemsPerPage = 5;
+    this.ACTIVE_CLASS = Object.freeze("active");
+    this.ITEM_PER_PAGE = Object.freeze(5);
     this.postRepository = postRepository;
     this.allPosts = this.postRepository.getAllPosts();
     this.currentPage = this.totalPages();
     this.renderPagination();
-    this.setActivePage(this.currentPage);
+    this.setCurrentPage(this.currentPage);
     this.loadAllPosts(this.currentPage);
     this.disabledButton();
     this.setupEventListeners();
   }
 
   totalPages(){
-    return Math.max(1, Math.ceil(this.allPosts.length / this.itemsPerPage));
+    return Math.max(1, Math.ceil(this.allPosts.length / this.ITEM_PER_PAGE));
   }
 
   createComment(){
@@ -29,7 +29,7 @@ export class PostManager {
     this.allPosts = this.postRepository.getAllPosts();
     const totalPages = this.totalPages();
     this.renderPagination();
-    this.setActivePage(totalPages);
+    this.setCurrentPage(totalPages);
     this.loadAllPosts(totalPages);
     this.disabledButton();
     this.commentInput.value = "";
@@ -47,7 +47,7 @@ export class PostManager {
     if(this.currentPage > totalPages) {
       this.currentPage = totalPages;
     }
-    this.setActivePage(this.currentPage);
+    this.setCurrentPage(this.currentPage);
     this.loadAllPosts(this.currentPage);
     this.disabledButton();
   }
@@ -79,8 +79,8 @@ export class PostManager {
   loadAllPosts(page){
     this.currentPage = page;
     this.postList.innerHTML = "";
-    const startPost = (page - 1) * this.itemsPerPage;
-    const endPost = startPost + this.itemsPerPage;
+    const startPost = (page - 1) * this.ITEM_PER_PAGE;
+    const endPost = startPost + this.ITEM_PER_PAGE;
     const paginatedPosts = this.allPosts.slice(startPost, endPost);
     paginatedPosts.forEach( post => {
       this.addPostToList(post.postKey, post.comment, post.postNum);
@@ -94,23 +94,27 @@ export class PostManager {
   }
 
   renderPagination(){
-    this.paginateButton.innerHTML = "";
+    this.pagination.innerHTML = "";
     const totalPages = this.totalPages();
     for(let i = 1; i <= totalPages; i++){
       const pageButton = document.createElement("button");
       pageButton.textContent = i;
-      this.paginateButton.appendChild(pageButton);
+      this.pagination.appendChild(pageButton);
     }
   }
 
-  setActivePage(page){
-    const allPageButtons = this.paginateButton.querySelectorAll("button");
-    allPageButtons.forEach(btn => btn.classList.remove(this.active));
-    const targetBtn = this.paginateButton.querySelectorAll("button")[page - 1];
+  updatePageBtnUI(page){
+    const allPageButtons = this.pagination.querySelectorAll("button");
+    allPageButtons.forEach(btn => btn.classList.remove(this.ACTIVE_CLASS));
+    const targetBtn = this.pagination.querySelectorAll("button")[page - 1];
     if(targetBtn){
-      targetBtn.classList.add(this.active);
+      targetBtn.classList.add(this.ACTIVE_CLASS);
     }
+  }
+
+  setCurrentPage(page){
     this.currentPage = page;
+    this.updatePageBtnUI(page);
   }
 
   setupEventListeners(){
@@ -129,17 +133,17 @@ export class PostManager {
       }
     });
 
-    this.paginateButton.addEventListener("click", e => {
+    this.pagination.addEventListener("click", e => {
       if(e.target.tagName !== "BUTTON") return;
       const selectedPage = parseInt(e.target.textContent);
-      this.setActivePage(selectedPage);
+      this.setCurrentPage(selectedPage);
       this.loadAllPosts(selectedPage);
       this.disabledButton();
     });
 
     this.prevButton.addEventListener("click", () => {
       if(this.currentPage > 1){
-        this.setActivePage(this.currentPage - 1);
+        this.setCurrentPage(this.currentPage - 1);
         this.loadAllPosts(this.currentPage);
         this.disabledButton();
       }
@@ -148,7 +152,7 @@ export class PostManager {
     this.nextButton.addEventListener("click", () => {
       const totalPages = this.totalPages();
       if(this.currentPage < totalPages){
-        this.setActivePage(this.currentPage + 1);
+        this.setCurrentPage(this.currentPage + 1);
         this.loadAllPosts(this.currentPage);
         this.disabledButton();
       }

@@ -94,14 +94,14 @@ li span {
   flex: none;
 }
 
-#pagination {
+#paginationContainer {
   display: flex;
   justify-content: center;
   gap: 1rem;
   margin-top: 3rem;
 }
 
-#pagination button {
+#paginationContainer button {
   border: 1px solid #ccc;
   background-color: white;
   color: #333;
@@ -113,22 +113,22 @@ li span {
   transition: 0.2s;
 }
 
-#pagination button:hover:not(:disabled):not(.active) {
+#paginationContainer button:hover:not(:disabled):not(.active) {
   background-color: #f0f0f0;
 }
 
-#pagination button.active {
+#paginationContainer button.active {
   background-color: #333;
   color: white;
   cursor: default;
 }
 
-#pagination button:disabled {
+#paginationContainer button:disabled {
   opacity: 0.4;
   cursor: default;
 }
 
-#paginateButton {
+#pagination {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
