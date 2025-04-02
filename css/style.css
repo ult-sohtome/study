@@ -93,6 +93,53 @@ li span {
   cursor: pointer;
   flex: none;
 }
+
+#paginationContainer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+#paginationContainer button {
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #333;
+  padding: 15px 0;
+  cursor: pointer;
+  min-width: 40px;
+  text-align: center;
+  border-radius: 5px;
+  transition: 0.2s;
+}
+
+#paginationContainer button:hover:not(:disabled):not(.active) {
+  background-color: #f0f0f0;
+}
+
+#paginationContainer button.active {
+  background-color: #333;
+  color: white;
+  cursor: default;
+}
+
+#paginationContainer button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+#pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.active {
+  background-color: #fff;
+  color: #121212;
+  border: none;
+}
+
 @media screen and (max-width: 800px) {
   div {
     flex-direction: column;
