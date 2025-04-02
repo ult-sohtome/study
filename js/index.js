@@ -1,4 +1,7 @@
-import { PostManager } from './postManager.js';
+import { PostRepository } from "./repositories/postRepository.js";
+import { PostListController } from './postListController.js';
+import { PostCreate } from './parts/postCreate.js';
+import { PostDelete } from './parts/postDelete.js';
 
 document.addEventListener("DOMContentLoaded", ()=>{
   const htmlIds = {
@@ -9,5 +12,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
     paginateId: "pagination",
     nextButtonId: "nextBtn"
   };
-  new PostManager(htmlIds);
+  const postRepository = new PostRepository();
+  const postListController = new PostListController(htmlIds, postRepository);
+  new PostCreate(htmlIds, postRepository, postListController);
+  new PostDelete(postRepository, postListController);
 });
