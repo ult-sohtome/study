@@ -28,36 +28,12 @@ export class PostRepository {
     localStorage.setItem(this.#config.counterKey, nextCount);
   }
 
-  migrateCommentData(key){
-    const localStorageData = localStorage.getItem(key);
-    let migratedData = null;
-    try {
-      const parsedData = JSON.parse(localStorageData);
-      if(typeof parsedData === "object" &&
-        parsedData !== null &&
-        parsedData.hasOwnProperty("commentText") &&
-        parsedData.hasOwnProperty("createdAt")
-      ){
-        return;
-      }
-    } catch (e) {
-      // NOTE: 古いデータ形式のためオブジェクト形式に変換
-    }
-    migratedData = {
-      commentText: localStorageData,
-      createdAt: ""
-    };
-    localStorage.setItem(key, JSON.stringify(migratedData));
-  }
-
   getComment(key){
-    this.migrateCommentData(key);
     const commentData = JSON.parse(localStorage.getItem(key));
     return commentData.commentText;
   }
 
   getCommentTime(key){
-    this.migrateCommentData(key);
     const commentData = JSON.parse(localStorage.getItem(key));
     if(!commentData.createdAt){
       return "";
@@ -79,6 +55,17 @@ export class PostRepository {
 
   getPostNumberFromKey(key){
     return parseInt(key.replace(this.#config.commentPrefix, ""), 10);
+  }
+
+  getAllPostKeys(){
+    const postKeys = [];
+    for(let i = 0; i < localStorage.length; i++){
+      const postKey = localStorage.key(i);
+      if(postKey && postKey.startsWith(this.#config.commentPrefix)){
+        postKeys.push(postKey);
+      }
+    }
+    return postKeys;
   }
 
   getAllPosts(){
