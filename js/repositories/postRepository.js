@@ -4,8 +4,7 @@ export class PostRepository {
   constructor(){
     this.#config = Object.freeze({
       counterKey: "comment_counter",
-      commentPrefix: "comment_num_",
-      defaulData: new Date("2025-04-02T17:00:00+09:00")
+      commentPrefix: "comment_num_"
     });
   }
   
@@ -29,34 +28,41 @@ export class PostRepository {
     localStorage.setItem(this.#config.counterKey, nextCount);
   }
 
-  getComment(key){
+  migrateCommentData(key){
     const localStorageData = localStorage.getItem(key);
+    let migratedData = null;
     try {
-      const commentData = JSON.parse(localStorageData);
-      if (typeof commentData === "string") {
-        return commentData;
-      } else if (commentData && typeof commentData === "object") {
-        return commentData.commentText;
+      const parsedData = JSON.parse(localStorageData);
+      if(typeof parsedData === "object" &&
+        parsedData !== null &&
+        parsedData.hasOwnProperty("commentText") &&
+        parsedData.hasOwnProperty("createdAt")
+      ){
+        return;
       }
-      return "";
-    } catch {
-      return localStorageData;
+    } catch (e) {
+      // NOTE: 古いデータ形式のためオブジェクト形式に変換
     }
+    migratedData = {
+      commentText: localStorageData,
+      createdAt: ""
+    };
+    localStorage.setItem(key, JSON.stringify(migratedData));
+  }
+
+  getComment(key){
+    this.migrateCommentData(key);
+    const commentData = JSON.parse(localStorage.getItem(key));
+    return commentData.commentText;
   }
 
   getCommentTime(key){
-    const localStorageData = localStorage.getItem(key);
-    const defaulData = this.#config.defaulData;
-    try {
-      const commentData = JSON.parse(localStorageData);
-      if(commentData && commentData.createdAt) {
-        return new Date(commentData.createdAt).toLocaleString("ja-JP");
-      } else {
-        return defaulData.toLocaleString("ja-JP");
-      }
-    } catch {
-      return defaulData.toLocaleString("ja-JP");
+    this.migrateCommentData(key);
+    const commentData = JSON.parse(localStorage.getItem(key));
+    if(!commentData.createdAt){
+      return "";
     }
+    return new Date(commentData.createdAt).toLocaleString("ja-JP");
   }
 
   deleteComment(key){
@@ -83,7 +89,7 @@ export class PostRepository {
         const comment = this.getComment(postKey);
         const postNum = this.getPostNumberFromKey(postKey);
         const createdAt = this.getCommentTime(postKey);
-        posts.push({ postKey, comment, postNum, time: createdAt });
+        posts.push({ postKey, comment, postNum, createdAt });
       }
     }
     posts.sort((a,b) => a.postNum - b.postNum);

@@ -55,7 +55,10 @@ export class PostListController{
     this.postList.innerHTML = "";
     const paginatedPosts = this.paginator.getCurrentPagePosts(page, this.allPosts);
     paginatedPosts.forEach( post => {
-      this.addPostToList(post.postKey, post.comment, post.postNum, post.time);
+      if(!post.createdAt) {
+        post.createdAt = "----/--/-- --:--:--";
+      }
+      this.addPostToList(post.postKey, post.comment, post.postNum, post.createdAt);
     });
   }
 
