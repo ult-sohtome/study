@@ -4,7 +4,8 @@ export class PostRepository {
   constructor(){
     this.#config = Object.freeze({
       counterKey: "comment_counter",
-      commentPrefix: "comment_num_"
+      commentPrefix: "comment_num_",
+      defaulData: new Date("2025-04-02T17:00:00+09:00")
     });
   }
   
@@ -16,37 +17,46 @@ export class PostRepository {
     return this.#config.commentPrefix + count;
   }
 
-  getFormattedDataTime(){
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2,"0");
-    const day = String(now.getDate()).padStart(2, "0");
-    const hour = String(now.getHours()).padStart(2, "0");
-    const minute = String(now.getMinutes()).padStart(2, "0");
-    const second = String(now.getSeconds()).padStart(2, "0");
-    return `${year}/${month}/${day} ${hour}:${minute}:${second}`;
-  }
-
   addComment(comment){
     const currentCount = this.getCurrentCount();
     const nextCount = currentCount + 1;
     const postKey = this.getPostKey(nextCount);
     const commentData = {
       commentText: comment,
-      time: this.getFormattedDataTime()
+      createdAt: new Date().toISOString()
     };
     localStorage.setItem(postKey, JSON.stringify(commentData));
     localStorage.setItem(this.#config.counterKey, nextCount);
   }
 
   getComment(key){
-    const commentData = JSON.parse(localStorage.getItem(key));
-    return commentData.commentText;
+    const localStorageData = localStorage.getItem(key);
+    try {
+      const commentData = JSON.parse(localStorageData);
+      if (typeof commentData === "string") {
+        return commentData;
+      } else if (commentData && typeof commentData === "object") {
+        return commentData.commentText;
+      }
+      return "";
+    } catch {
+      return localStorageData;
+    }
   }
 
   getCommentTime(key){
-    const commentData = JSON.parse(localStorage.getItem(key));
-    return commentData.time;
+    const localStorageData = localStorage.getItem(key);
+    const defaulData = this.#config.defaulData;
+    try {
+      const commentData = JSON.parse(localStorageData);
+      if(commentData && commentData.createdAt) {
+        return new Date(commentData.createdAt).toLocaleString("ja-JP");
+      } else {
+        return defaulData.toLocaleString("ja-JP");
+      }
+    } catch {
+      return defaulData.toLocaleString("ja-JP");
+    }
   }
 
   deleteComment(key){
@@ -72,8 +82,8 @@ export class PostRepository {
       if(postKey && postKey.startsWith(this.#config.commentPrefix)){
         const comment = this.getComment(postKey);
         const postNum = this.getPostNumberFromKey(postKey);
-        const time = this.getCommentTime(postKey);
-        posts.push({ postKey, comment, postNum, time });
+        const createdAt = this.getCommentTime(postKey);
+        posts.push({ postKey, comment, postNum, time: createdAt });
       }
     }
     posts.sort((a,b) => a.postNum - b.postNum);
