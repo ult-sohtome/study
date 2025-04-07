@@ -1,4 +1,4 @@
-import { Paginator } from "./paginator.js";
+import { Paginator } from "./common/paginator.js";
 
 export class PostListController{
   constructor(htmlIds, postRepository){
@@ -20,9 +20,14 @@ export class PostListController{
     this.refreshPostList(this.currentPage);
   }
 
-  addPostToList(key, comment, postNum){
+  addPostToList(key, comment, postNum, time){
     const li = document.createElement('li');
-    const span = document.createElement('span');
+    const div = document.createElement('div');
+    div.className = 'postText';
+
+    const spanTime = document.createElement('span');
+    spanTime.className = 'time';
+    spanTime.textContent = `[${time}]`;
   
     const spanKey = document.createElement('span');
     spanKey.textContent = `${postNum}:`;
@@ -36,9 +41,10 @@ export class PostListController{
     deleteButton.className = 'deleteButton';
     deleteButton.setAttribute("data-key", key);
   
-    span.appendChild(spanKey);
-    span.appendChild(spanComment);
-    li.appendChild(span);
+    div.appendChild(spanTime);
+    div.appendChild(spanKey);
+    div.appendChild(spanComment);
+    li.appendChild(div);
     li.appendChild(deleteButton);
   
     this.postList.insertBefore(li, this.postList.firstChild);
@@ -49,7 +55,10 @@ export class PostListController{
     this.postList.innerHTML = "";
     const paginatedPosts = this.paginator.getCurrentPagePosts(page, this.allPosts);
     paginatedPosts.forEach( post => {
-      this.addPostToList(post.postKey, post.comment, post.postNum);
+      if(!post.createdAt) {
+        post.createdAt = "----/--/-- --:--:--";
+      }
+      this.addPostToList(post.postKey, post.comment, post.postNum, post.createdAt);
     });
   }
 
