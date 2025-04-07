@@ -16,11 +16,12 @@ export class PostRepository {
     return this.#config.commentPrefix + count;
   }
 
-  addComment(comment){
+  addComment(comment, userName){
     const currentCount = this.getCurrentCount();
     const nextCount = currentCount + 1;
     const postKey = this.getPostKey(nextCount);
     const commentData = {
+      userName,
       commentText: comment,
       createdAt: new Date().toISOString()
     };
@@ -39,6 +40,11 @@ export class PostRepository {
       return "";
     }
     return new Date(commentData.createdAt).toLocaleString("ja-JP");
+  }
+
+  getUserName(key){
+    const commentData = JSON.parse(localStorage.getItem(key));
+    return commentData.userName;
   }
 
   deleteComment(key){
@@ -76,7 +82,8 @@ export class PostRepository {
         const comment = this.getComment(postKey);
         const postNum = this.getPostNumberFromKey(postKey);
         const createdAt = this.getCommentTime(postKey);
-        posts.push({ postKey, comment, postNum, createdAt });
+        const userName = this.getUserName(postKey);
+        posts.push({ postKey, comment, postNum, createdAt, userName });
       }
     }
     posts.sort((a,b) => a.postNum - b.postNum);
