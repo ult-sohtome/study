@@ -2,8 +2,8 @@ export class CommentDataMigration_20250403 {
   constructor(postRepository){
     this.postRepository = postRepository;
     if(this.postRepository.hasComments()){
-      const postKyes = this.postRepository.getAllPostKeys();
-      postKyes.forEach(postKye => {
+      const postKeys = this.postRepository.getAllPostKeys();
+      postKeys.forEach(postKye => {
         this.migrateCommentData(postKye);
       });
     }

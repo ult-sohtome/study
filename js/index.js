@@ -14,10 +14,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
     nextButtonId: "nextBtn"
   };
   const postRepository = new PostRepository();
-  const MIGRATION_KEY = 'migration_comment_data_20250403';
+  const MIGRATION_KEY = 'is_comment_data_migrated_20250403';
   if(!localStorage.getItem(MIGRATION_KEY)){
     new CommentDataMigration_20250403(postRepository);
-    localStorage.setItem(MIGRATION_KEY, '実行済み');
+    localStorage.setItem(MIGRATION_KEY, 'true');
   }
   const postListController = new PostListController(htmlIds, postRepository);
   new PostCreate(htmlIds, postRepository, postListController);
