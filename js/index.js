@@ -2,11 +2,13 @@ import { PostRepository } from "./repositories/postRepository.js";
 import { PostListController } from './postListController.js';
 import { PostCreate } from './parts/postCreate.js';
 import { PostDelete } from './parts/postDelete.js';
-import { CommentDataMigration_20250403 } from "./migration/commentDataMigration_20250403.js";
+import { UserNameRepository } from "./repositories/userNameRepository.js";
+import { runMigrations } from "./migration/runMigrations.js";
 
 document.addEventListener("DOMContentLoaded", ()=>{
   const htmlIds = {
     postListId: "postList",
+    userNameId: "username",
     commentInputId: "commentInput",
     postButtonId: "postButton",
     prevButtonId: "prevBtn",
@@ -14,12 +16,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
     nextButtonId: "nextBtn"
   };
   const postRepository = new PostRepository();
-  const MIGRATION_KEY = 'is_comment_data_migrated_20250403';
-  if(!localStorage.getItem(MIGRATION_KEY)){
-    new CommentDataMigration_20250403(postRepository);
-    localStorage.setItem(MIGRATION_KEY, 'true');
-  }
+  runMigrations(postRepository);
+
+  const userNameRepository = new UserNameRepository();
   const postListController = new PostListController(htmlIds, postRepository);
-  new PostCreate(htmlIds, postRepository, postListController);
+  const postCreate = new PostCreate(htmlIds, postRepository, postListController, userNameRepository );
   new PostDelete(postRepository, postListController);
+
+  if(userNameRepository.hasUserName()){
+    postCreate.userName.value = userNameRepository.getUserName();
+  }
 });

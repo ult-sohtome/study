@@ -13,12 +13,18 @@
     <h1>簡易掲示板</h1>
   </header>
   <main>
-    <div>
+    <div class="theme">
       <h2>テーマ：雑談</h2>
     </div>
-    <div>
-      <textarea name="comment" id="commentInput" placeholder="話したいことを入力"></textarea>
-      <p><input type="submit" value="書き込む" id="postButton"></p>
+    <div class="createPost">
+      <div class="setUsername">
+        <label for="username">ニックネーム：</label>
+        <input id="username" name="username" type="text" placeholder="名無し"/>
+      </div>
+      <div class="setComment">
+        <textarea name="comment" id="commentInput" placeholder="話したいことを入力"></textarea>
+        <p><input type="submit" value="書き込む" id="postButton"></p>
+      </div>
     </div>
     <div class="separator"></div>
     <div class="posts">

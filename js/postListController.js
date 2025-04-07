@@ -20,7 +20,7 @@ export class PostListController{
     this.refreshPostList(this.currentPage);
   }
 
-  addPostToList(key, comment, postNum, time){
+  addPostToList(key, userName, comment, postNum, time){
     const li = document.createElement('li');
     const div = document.createElement('div');
     div.className = 'postText';
@@ -28,8 +28,13 @@ export class PostListController{
     const spanTime = document.createElement('span');
     spanTime.className = 'time';
     spanTime.textContent = `[${time}]`;
+
+    const spanUsername = document.createElement('span');
+    spanUsername.className = 'userName';
+    spanUsername.textContent = `${userName}さん`;
   
     const spanKey = document.createElement('span');
+    spanKey.className = 'postNum';
     spanKey.textContent = `${postNum}:`;
     
     const spanComment = document.createElement('span');
@@ -42,6 +47,7 @@ export class PostListController{
     deleteButton.setAttribute("data-key", key);
   
     div.appendChild(spanTime);
+    div.appendChild(spanUsername);
     div.appendChild(spanKey);
     div.appendChild(spanComment);
     li.appendChild(div);
@@ -58,7 +64,10 @@ export class PostListController{
       if(!post.createdAt) {
         post.createdAt = "----/--/-- --:--:--";
       }
-      this.addPostToList(post.postKey, post.comment, post.postNum, post.createdAt);
+      if(!post.userName) {
+        post.userName = "名無し";
+      }
+      this.addPostToList(post.postKey, post.userName, post.comment, post.postNum, post.createdAt);
     });
   }
 

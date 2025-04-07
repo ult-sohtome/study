@@ -22,6 +22,9 @@ h2 {
 
 div {
   display: flex;
+}
+
+.theme {
   justify-content: center;
   align-items: center;
   margin: 40px;
@@ -52,19 +55,37 @@ input[type="submit"] {
   padding: 10px;
 }
 
+.createPost {
+  display: block;
+  margin-left: 10%;
+}
+
+.setUsername {
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+#username {
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  line-height: 1.5;
+  padding-left: 5px;
+}
+
 .separator {
   margin: 20px 0;
   border-top: 2px solid #ccc;
 }
 
 .posts {
-  display: flex;
+  margin-left: 10%;
   flex-direction: column;
 }
 
 ul {
   list-style: none;
-  width: 80%;
+  width: 90%;
   padding: 0;
 }
 
@@ -79,9 +100,10 @@ li {
 }
 
 li span {
-  margin-right: 2rem;
+  /* margin-right: 2rem; */
   font-size: 1.5rem;
   word-break: break-all;
+  min-width: 10ch;
 }
 
 .postText {
@@ -94,6 +116,14 @@ li span {
 .postText .time {
   white-space: nowrap;
   min-width: 20ch;
+}
+
+.postText .userName {
+  padding-right: 1rem;
+}
+
+.postText .postNum {
+  min-width: 3ch;
 }
 
 .deleteButton {
@@ -155,8 +185,10 @@ li span {
 @media screen and (max-width: 800px) {
   div {
     flex-direction: column;
-    align-items: center;
-    margin: 20px;
+  }
+
+  .setUsername {
+    flex-direction: row;
   }
 
   textarea {
@@ -166,7 +198,7 @@ li span {
 
   p {
     height: auto;
-    margin: 1rem auto;
+    margin: 1rem 0;
     text-align: center;
   }
 
@@ -175,14 +207,31 @@ li span {
     height: auto;
     padding: 1rem;
     white-space: normal;
+    font-size: 1.2rem;
   }
 
   .deleteButton {
     margin-top: 10px;
   }
+
+  #paginationContainer {
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    margin: 20px;
+  }
+
+  #pagination {
+    display: block;
+    flex-wrap: wrap;
+  }
+  #pagination button { 
+    margin: 5px;
+  }
+
 }
 
-@media screen and (max-width: 350px) {
+@media screen and (max-width: 400px) {
   h1 {
     font-size: 3rem;
   }
@@ -192,11 +241,20 @@ li span {
   }
 
   p {
-    width: auto;
+    width: 25%;
+  }
+
+  label {
+    font-size: 1rem;
+  }
+
+  input[type="text"] {
+    width: 35%;
+    font-size: 1rem;
   }
 
   input[type="submit"] {
-    width: 100%;
+    width: 70%;
     font-size: 1rem;
   }
 
