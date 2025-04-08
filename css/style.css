@@ -51,6 +51,17 @@ p {
   border-radius: 5px;
 }
 
+.error {
+  display: none;
+  justify-content: flex-start;
+  background-color: red;
+  margin: 5px;
+  padding: 3px;
+  border-radius: 0;
+  width: auto;
+  height: auto;
+}
+
 input[type="submit"] {
   padding: 10px;
 }
