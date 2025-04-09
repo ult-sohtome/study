@@ -1,8 +1,11 @@
+import { PostCreateValidation } from "../validation/postCreateValidation.js";
+
 export class PostCreate {
   constructor(htmlIds, postRepository, postListController, userNameRepository){
     this.postRepository = postRepository;
     this.postListController = postListController;
     this.userNameRepository = userNameRepository;
+    this.postCreateValidation = new PostCreateValidation();
     this.commentInput = document.getElementById(htmlIds.commentInputId);
     this.userName = document.getElementById(htmlIds.userNameId);
     this.postButton = document.getElementById(htmlIds.postButtonId);
@@ -14,31 +17,24 @@ export class PostCreate {
   createComment(){
     const comment = this.commentInput.value.trim();
     const userName = this.userName.value.trim();
-    this.errorNameElem.textContent = "";
-    this.errorCommentElem.textContent = "";
-    let hasError = false;
+    this.clearFormErrors();
+    let isValid = true;
 
-    if(Array.from(userName).length > 20){
-      this.errorNameElem.textContent = "20文字以内でニックネームを入力してください。";
+    const userNameValidation = this.postCreateValidation.validateUserName(userName);
+    if(!userNameValidation.isValid){
+      this.errorNameElem.textContent = userNameValidation.errorMessage;
       this.errorNameElem.style.display = "inline-block";
-      hasError = true;
-    } else {
-      this.errorNameElem.style.display = "none";
+      isValid = false;
     }
 
-    if(!comment){
-      this.errorCommentElem.textContent = "コメントを入力してください。";
+    const commentValidation = this.postCreateValidation.validateCreateComment(comment);
+    if(!commentValidation.isValid){
+      this.errorCommentElem.textContent = commentValidation.errorMessage;
       this.errorCommentElem.style.display = "inline-block";
-      hasError = true;
-    } else if(Array.from(comment).length > 255){
-      this.errorCommentElem.textContent = "255文字以内でコメントを入力してください。";
-      this.errorCommentElem.style.display = "inline-block";
-      hasError = true;
-    } else {
-      this.errorCommentElem.style.display = "none";
+      isValid = false;
     }
 
-    if(hasError) return;
+    if(!isValid) return;
 
     if(userName !== ""){
       this.userNameRepository.setUserName(userName);
@@ -48,6 +44,13 @@ export class PostCreate {
     const totalPages = this.postListController.paginator.totalPages(this.postListController.allPosts);
     this.postListController.refreshPostList(totalPages);
     this.commentInput.value = "";
+  }
+
+  clearFormErrors(){
+    this.errorNameElem.textContent = "";
+    this.errorCommentElem.textContent = "";
+    this.errorCommentElem.style.display = "none";
+    this.errorNameElem.style.display = "none";
   }
 
   setupEventListeners(){
