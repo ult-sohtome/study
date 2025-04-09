@@ -1,3 +1,5 @@
+import { PostCreateValidation } from "../validation/postCreateValidation.js";
+
 export class PostCreate {
   constructor(htmlIds, postRepository, postListController, userNameRepository){
     this.postRepository = postRepository;
@@ -6,13 +8,33 @@ export class PostCreate {
     this.commentInput = document.getElementById(htmlIds.commentInputId);
     this.userName = document.getElementById(htmlIds.userNameId);
     this.postButton = document.getElementById(htmlIds.postButtonId);
+    this.errorNameElem = document.getElementById(htmlIds.errorNameId);
+    this.errorCommentElem = document.getElementById(htmlIds.errorCommentId);
     this.setupEventListeners();
   }
 
   createComment(){
     const comment = this.commentInput.value.trim();
-    if(!comment) return;
     const userName = this.userName.value.trim();
+    this.clearFormErrors();
+    let isValid = true;
+
+    const userNameValidation = PostCreateValidation.validateUserName(userName);
+    if(!userNameValidation.isValid){
+      this.errorNameElem.textContent = userNameValidation.errorMessage;
+      this.errorNameElem.style.display = "inline-block";
+      isValid = false;
+    }
+
+    const commentValidation = PostCreateValidation.validateCreateComment(comment);
+    if(!commentValidation.isValid){
+      this.errorCommentElem.textContent = commentValidation.errorMessage;
+      this.errorCommentElem.style.display = "inline-block";
+      isValid = false;
+    }
+
+    if(!isValid) return;
+
     if(userName !== ""){
       this.userNameRepository.setUserName(userName);
     }
@@ -21,6 +43,13 @@ export class PostCreate {
     const totalPages = this.postListController.paginator.totalPages(this.postListController.allPosts);
     this.postListController.refreshPostList(totalPages);
     this.commentInput.value = "";
+  }
+
+  clearFormErrors(){
+    this.errorNameElem.textContent = "";
+    this.errorCommentElem.textContent = "";
+    this.errorCommentElem.style.display = "none";
+    this.errorNameElem.style.display = "none";
   }
 
   setupEventListeners(){
