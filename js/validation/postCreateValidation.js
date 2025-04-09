@@ -1,5 +1,5 @@
 export class PostCreateValidation {
-  validateUserName(userName) {
+  static validateUserName(userName) {
     if(Array.from(userName).length > 20){
       return {
         isValid: false,
@@ -9,13 +9,14 @@ export class PostCreateValidation {
     return { isValid: true };
   }
 
-  validateCreateComment(comment) {
+  static validateCreateComment(comment) {
     if (!comment) {
       return {
         isValid: false,
         errorMessage: "コメントを入力してください。"
       };
-    } else if (Array.from(comment).length > 255) {
+    }
+    if (Array.from(comment).length > 255) {
       return {
         isValid: false,
         errorMessage: "255文字以内でコメントを入力してください。"

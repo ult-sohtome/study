@@ -5,7 +5,6 @@ export class PostCreate {
     this.postRepository = postRepository;
     this.postListController = postListController;
     this.userNameRepository = userNameRepository;
-    this.postCreateValidation = new PostCreateValidation();
     this.commentInput = document.getElementById(htmlIds.commentInputId);
     this.userName = document.getElementById(htmlIds.userNameId);
     this.postButton = document.getElementById(htmlIds.postButtonId);
@@ -20,14 +19,14 @@ export class PostCreate {
     this.clearFormErrors();
     let isValid = true;
 
-    const userNameValidation = this.postCreateValidation.validateUserName(userName);
+    const userNameValidation = PostCreateValidation.validateUserName(userName);
     if(!userNameValidation.isValid){
       this.errorNameElem.textContent = userNameValidation.errorMessage;
       this.errorNameElem.style.display = "inline-block";
       isValid = false;
     }
 
-    const commentValidation = this.postCreateValidation.validateCreateComment(comment);
+    const commentValidation = PostCreateValidation.validateCreateComment(comment);
     if(!commentValidation.isValid){
       this.errorCommentElem.textContent = commentValidation.errorMessage;
       this.errorCommentElem.style.display = "inline-block";
