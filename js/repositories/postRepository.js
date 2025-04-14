@@ -89,4 +89,13 @@ export class PostRepository {
     posts.sort((a,b) => a.postNum - b.postNum);
     return posts;
   }
+
+  updateComment(postKey, userName, comment){
+    const commentData = {
+      userName,
+      commentText: comment,
+      createdAt: new Date().toISOString()
+    };
+    localStorage.setItem(postKey, JSON.stringify(commentData));
+  }
 }
