@@ -1,4 +1,5 @@
 import { Paginator } from "./common/paginator.js";
+import { PostCreateValidation } from "./validation/postCreateValidation.js";
 
 export class PostListController{
   constructor(htmlIds, postRepository){
@@ -36,8 +37,10 @@ export class PostListController{
 
   addPostToList(key, userName, comment, postNum, time){
     const li = document.createElement('li');
-    const div = document.createElement('div');
-    div.className = 'postText';
+    const postContent = document.createElement('div');
+    postContent.className = 'postContent';
+    const postText = document.createElement('div');
+    postText.className = 'postText';
 
     const spanTime = document.createElement('span');
     spanTime.className = 'time';
@@ -63,34 +66,47 @@ export class PostListController{
     deleteButton.className = 'deleteButton';
     deleteButton.setAttribute("data-key", key);
   
-    div.appendChild(spanTime);
-    div.appendChild(spanUsername);
-    div.appendChild(spanKey);
-    div.appendChild(spanComment);
-    li.appendChild(div);
-    li.appendChild(editButton);
-    li.appendChild(deleteButton);
+    postText.appendChild(spanTime);
+    postText.appendChild(spanUsername);
+    postText.appendChild(spanKey);
+    postText.appendChild(spanComment);
+    postContent.appendChild(postText);
+    postContent.appendChild(editButton);
+    postContent.appendChild(deleteButton);
+    li.appendChild(postContent);
   
     this.postList.insertBefore(li, this.postList.firstChild);
   }
 
   editPost(postKey, liElement){
-    const div = liElement.querySelector(".postText");
-    const spanUsername = div.querySelector(".userName");
-    const spanComment = div.querySelector(".commentText");
+    const postContent = liElement.querySelector(".postContent");
+    const postText = liElement.querySelector(".postText");
+    const spanUsername = postText.querySelector(".userName");
+    const spanComment = postText.querySelector(".commentText");
     const currentUserName = spanUsername.textContent.replace("さん", "");
     const currentComment = spanComment.textContent;
 
-    const editUseName = document.createElement("input");
-    editUseName.value = currentUserName;
-    editUseName.className = "editUserName";
+    const errorName = document.createElement("p");
+    errorName.classList.add("error", "errorUpdateName");
+    errorName.style.display = "none";
+  
+    const errorComment = document.createElement("p");
+    errorComment.classList.add("error", "errorUpdateComment");
+    errorComment.style.display = "none";
+
+    liElement.insertBefore(errorName, postContent);
+    liElement.insertBefore(errorComment, postContent);
+
+    const editUserName = document.createElement("input");
+    editUserName.value = currentUserName;
+    editUserName.className = "editUserName";
 
     const editComment = document.createElement("textarea");
     editComment.value = currentComment;
     editComment.className = "editCommentText";
 
-    div.replaceChild(editUseName, spanUsername);
-    div.replaceChild(editComment, spanComment);
+    postText.replaceChild(editUserName, spanUsername);
+    postText.replaceChild(editComment, spanComment);
 
     const saveButton = document.createElement("button");
     saveButton.textContent = "上書き保存";
@@ -101,25 +117,49 @@ export class PostListController{
     cancelButton.textContent = "編集キャンセル";
     cancelButton.className = "cancelButton";
 
-    liElement.replaceChild(saveButton, liElement.querySelector(".editButton"));
-    liElement.replaceChild(cancelButton, liElement.querySelector(".deleteButton"));
+    postContent.replaceChild(saveButton, postContent.querySelector(".editButton"));
+    postContent.replaceChild(cancelButton, postContent.querySelector(".deleteButton"));
   }
 
   updatePost(postKey, liElement){
-    const div = liElement.querySelector(".postText");
-    const editUserName = div.querySelector(".editUserName").value.trim();
-    const editComment = div.querySelector(".editCommentText").value.trim();
+    const postContent = liElement.querySelector(".postContent");
+    const postText = liElement.querySelector(".postText");
+    const editUserName = postText.querySelector(".editUserName").value.trim();
+    const editComment = postText.querySelector(".editCommentText").value.trim();
+    const errorNameElem = liElement.querySelector(".errorUpdateName");
+    const errorCommentElem = liElement.querySelector(".errorUpdateComment");
+  
+    errorNameElem.textContent = "";
+    errorCommentElem.textContent = "";
+    errorNameElem.style.display = "none";
+    errorCommentElem.style.display = "none";
+    let isValid = true;
 
+    const userNameValidation = PostCreateValidation.validateUserName(editUserName);
+    if(!userNameValidation.isValid){
+      errorNameElem.textContent = userNameValidation.errorMessage;
+      errorNameElem.style.display = "block";
+      isValid = false;
+    }
+
+    const commentValidation = PostCreateValidation.validateCreateComment(editComment);
+    if(!commentValidation.isValid){
+      errorCommentElem.textContent = commentValidation.errorMessage;
+      errorCommentElem.style.display = "block";
+      isValid = false;
+    }
+
+    if(!isValid) return;
     this.postRepository.updateComment(postKey, editUserName, editComment);
     
-    liElement.removeChild(liElement.querySelector(".saveButton"));
-    liElement.removeChild(liElement.querySelector(".cancelButton"));
+    postContent.removeChild(liElement.querySelector(".saveButton"));
+    postContent.removeChild(liElement.querySelector(".cancelButton"));
 
     const spanUsername = this.createSpanUserName(editUserName);
     const spanComment = this.createSpanComment(editComment);
 
-    div.replaceChild(spanUsername, div.querySelector(".editUserName"));
-    div.replaceChild(spanComment, div.querySelector(".editCommentText"));
+    postText.replaceChild(spanUsername, postText.querySelector(".editUserName"));
+    postText.replaceChild(spanComment, postText.querySelector(".editCommentText"));
 
     this.refreshPostList(this.currentPage);
   }

@@ -58,7 +58,7 @@ p {
   margin: 5px;
   padding: 3px;
   border-radius: 0;
-  width: auto;
+  width: fit-content;
   height: auto;
 }
 
@@ -102,8 +102,7 @@ ul {
 
 li {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   background: white;
   padding: 10px;
   border-bottom: 1px solid #ddd;
@@ -116,7 +115,17 @@ li span {
   min-width: 10ch;
 }
 
+.postContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
 .postText {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
   justify-content: flex-start;
   align-items: flex-start;
   margin: 0;
@@ -276,6 +285,9 @@ li span {
     margin: 5px;
   }
 
+  .postContent {
+    align-items: flex-start;
+  }
 }
 
 @media screen and (max-width: 500px) {
