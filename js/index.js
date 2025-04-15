@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   const postListController = new PostListController(htmlIds, postRepository);
   const postCreate = new PostCreate(htmlIds, postRepository, postListController, userNameRepository );
   new PostDelete(postRepository, postListController);
-  new PostEdit(postListController);
+  new PostEdit(postRepository, postListController);
 
   if(userNameRepository.hasUserName()){
     postCreate.userName.value = userNameRepository.getUserName();
