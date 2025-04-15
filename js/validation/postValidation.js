@@ -1,4 +1,4 @@
-export class PostCreateValidation {
+export class PostValidation {
   static validateUserName(userName) {
     if(Array.from(userName).length > 20){
       return {

@@ -1,4 +1,4 @@
-import { PostCreateValidation } from "../validation/postCreateValidation.js";
+import { PostValidation } from "../validation/postValidation.js";
 
 export class PostCreate {
   constructor(htmlIds, postRepository, postListController, userNameRepository){
@@ -19,14 +19,14 @@ export class PostCreate {
     this.clearFormErrors();
     let isValid = true;
 
-    const userNameValidation = PostCreateValidation.validateUserName(userName);
+    const userNameValidation = PostValidation.validateUserName(userName);
     if(!userNameValidation.isValid){
       this.errorNameElem.textContent = userNameValidation.errorMessage;
       this.errorNameElem.style.display = "inline-block";
       isValid = false;
     }
 
-    const commentValidation = PostCreateValidation.validateCreateComment(comment);
+    const commentValidation = PostValidation.validateCreateComment(comment);
     if(!commentValidation.isValid){
       this.errorCommentElem.textContent = commentValidation.errorMessage;
       this.errorCommentElem.style.display = "inline-block";

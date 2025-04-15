@@ -1,5 +1,5 @@
 import { Paginator } from "./common/paginator.js";
-import { PostCreateValidation } from "./validation/postCreateValidation.js";
+import { PostValidation } from "./validation/postValidation.js";
 
 export class PostListController{
   constructor(htmlIds, postRepository){
@@ -135,14 +135,14 @@ export class PostListController{
     errorCommentElem.style.display = "none";
     let isValid = true;
 
-    const userNameValidation = PostCreateValidation.validateUserName(editUserName);
+    const userNameValidation = PostValidation.validateUserName(editUserName);
     if(!userNameValidation.isValid){
       errorNameElem.textContent = userNameValidation.errorMessage;
       errorNameElem.style.display = "block";
       isValid = false;
     }
 
-    const commentValidation = PostCreateValidation.validateCreateComment(editComment);
+    const commentValidation = PostValidation.validateCreateComment(editComment);
     if(!commentValidation.isValid){
       errorCommentElem.textContent = commentValidation.errorMessage;
       errorCommentElem.style.display = "block";
@@ -150,7 +150,8 @@ export class PostListController{
     }
 
     if(!isValid) return;
-    this.postRepository.updateComment(postKey, editUserName, editComment);
+    const createdAt = this.postRepository.getCommentTime(postKey);
+    this.postRepository.updateComment(postKey, editUserName, editComment, createdAt);
     
     postContent.removeChild(liElement.querySelector(".saveButton"));
     postContent.removeChild(liElement.querySelector(".cancelButton"));

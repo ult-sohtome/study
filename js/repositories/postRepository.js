@@ -90,11 +90,12 @@ export class PostRepository {
     return posts;
   }
 
-  updateComment(postKey, userName, comment){
+  updateComment(postKey, userName, comment, createdAt){
     const commentData = {
       userName,
       commentText: comment,
-      createdAt: new Date().toISOString()
+      createdAt,
+      updatedAt: new Date().toISOString()
     };
     localStorage.setItem(postKey, JSON.stringify(commentData));
   }
