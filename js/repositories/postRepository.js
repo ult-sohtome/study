@@ -23,7 +23,8 @@ export class PostRepository {
     const commentData = {
       userName,
       commentText: comment,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      updatedAt: null
     };
     localStorage.setItem(postKey, JSON.stringify(commentData));
     localStorage.setItem(this.#config.counterKey, nextCount);
@@ -40,6 +41,14 @@ export class PostRepository {
       return "";
     }
     return new Date(commentData.createdAt).toLocaleString("ja-JP");
+  }
+
+  getCommentUpdatedTime(key){
+    const commentData = JSON.parse(localStorage.getItem(key));
+    if(!commentData.updatedAt){
+      return "";
+    }
+    return new Date(commentData.updatedAt).toLocaleString("ja-JP");
   }
 
   getUserName(key){
@@ -83,7 +92,8 @@ export class PostRepository {
         const postNum = this.getPostNumberFromKey(postKey);
         const createdAt = this.getCommentTime(postKey);
         const userName = this.getUserName(postKey);
-        posts.push({ postKey, comment, postNum, createdAt, userName });
+        const updatedAt = this.getCommentUpdatedTime(postKey);
+        posts.push({ postKey, comment, postNum, createdAt, userName, updatedAt });
       }
     }
     posts.sort((a,b) => a.postNum - b.postNum);
