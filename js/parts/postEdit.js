@@ -1,5 +1,5 @@
 import { PostValidation } from "../validation/postValidation.js";
-import { PostViewRenderer } from "./PostViewRenderer.js";
+import { PostViewRenderer } from "../view/PostViewRenderer.js";
 
 export class PostEdit {
   constructor(postRepository, postListController){
@@ -10,101 +10,56 @@ export class PostEdit {
   }
 
   editPost(postKey, liElement){
-    const postContent = liElement.querySelector(".postContent");
-    const postText = liElement.querySelector(".postText");
-    const spanUsername = postText.querySelector(".userName");
-    const spanComment = postText.querySelector(".commentText");
-    const currentUserName = spanUsername.textContent.replace("さん", "");
-    const currentComment = spanComment.textContent;
-
-    const errorName = PostViewRenderer.createErrorNameMessage();
-    const errorComment = PostViewRenderer.createErrorCommentMessage();
-
-    liElement.insertBefore(errorName, postContent);
-    liElement.insertBefore(errorComment, postContent);
-
-    const editUserName = PostViewRenderer.createInputUserName(currentUserName);
-    const editComment = PostViewRenderer.createTextAreaComment(currentComment);
-
-    postText.replaceChild(editUserName, spanUsername);
-    postText.replaceChild(editComment, spanComment);
-
-    const saveButton = PostViewRenderer.createSaveButton(postKey);
-    const cancelButton = PostViewRenderer.createCancelButton();
-
-    postContent.replaceChild(saveButton, postContent.querySelector(".editButton"));
-    postContent.replaceChild(cancelButton, postContent.querySelector(".deleteButton"));
+    PostViewRenderer.addErrorMessageElems(liElement);
+    PostViewRenderer.switchEditMode(postKey, liElement);
   }
 
   updatePost(postKey, liElement){
-    const postContent = liElement.querySelector(".postContent");
-    const postText = liElement.querySelector(".postText");
-    const editUserName = postText.querySelector(".editUserName").value.trim();
-    const editComment = postText.querySelector(".editCommentText").value.trim();
-    const errorNameElem = liElement.querySelector(".errorUpdateName");
-    const errorCommentElem = liElement.querySelector(".errorUpdateComment");
-  
-    errorNameElem.textContent = "";
-    errorCommentElem.textContent = "";
-    errorNameElem.style.display = "none";
-    errorCommentElem.style.display = "none";
+    PostViewRenderer.initErrorMessage(liElement);
     let isValid = true;
 
+    const editUserName = PostViewRenderer.getEditUserName(liElement);
+    const editComment = PostViewRenderer.getEditComment(liElement);
     const userNameValidation = PostValidation.validateUserName(editUserName);
+    const commentValidation = PostValidation.validateCreateComment(editComment);
+
     if(!userNameValidation.isValid){
-      errorNameElem.textContent = userNameValidation.errorMessage;
-      errorNameElem.style.display = "block";
+      PostViewRenderer.showErrorMessage(PostViewRenderer.getErrorNameElem(liElement), userNameValidation.errorMessage);
       isValid = false;
     }
 
-    const commentValidation = PostValidation.validateCreateComment(editComment);
     if(!commentValidation.isValid){
-      errorCommentElem.textContent = commentValidation.errorMessage;
-      errorCommentElem.style.display = "block";
+      PostViewRenderer.showErrorMessage(PostViewRenderer.getErrorCommentElem(liElement), commentValidation.errorMessage);
       isValid = false;
     }
-    
+
     if(!isValid) return;
 
     this.postRepository.updateComment(postKey, editUserName, editComment);
-    
-    postContent.removeChild(liElement.querySelector(".saveButton"));
-    postContent.removeChild(liElement.querySelector(".cancelButton"));
-
-    const spanUsername = PostViewRenderer.createSpanUserName(editUserName);
-    const spanComment = PostViewRenderer.createSpanComment(editComment);
-
-    postText.replaceChild(spanUsername, postText.querySelector(".editUserName"));
-    postText.replaceChild(spanComment, postText.querySelector(".editCommentText"));
-
+    PostViewRenderer.switchTextMode(liElement);
     this.postListController.refreshPostList(this.postListController.currentPage);
   }
 
   setupEventListeners(){
     this.postList.addEventListener("click", e => {
-      if(e.target.classList.contains("editButton")) {
-        const postKey = e.target.dataset.key;
-        const li = e.target.closest("li");
+      const target = e.target;
+      if(PostViewRenderer.isEditButton(target)) {
+        const postKey = PostViewRenderer.getPostKeyFromTarget(target);
+        const li = PostViewRenderer.findLiElementFromTarget(target);
 
         if(postKey && li){
           this.editPost(postKey, li);
         }
       }
-    });
-
-    this.postList.addEventListener("click", e => {
-      if(e.target.classList.contains("saveButton")) {
-        const postKey = e.target.dataset.key;
-        const li = e.target.closest("li");
+      if(PostViewRenderer.isSaveButton(target)) {
+        const postKey = PostViewRenderer.getPostKeyFromTarget(target);
+        const li = PostViewRenderer.findLiElementFromTarget(target);
 
         if(postKey && li){
           this.updatePost(postKey, li);
         }
       }
-    });
-
-    this.postList.addEventListener("click", e => {
-      if(e.target.classList.contains("cancelButton")) {
+      if(PostViewRenderer.isCancelButton(target)) {
         this.postListController.refreshPostList(this.postListController.currentPage);
       }
     });

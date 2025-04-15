@@ -1,5 +1,5 @@
 import { Paginator } from "./common/paginator.js";
-import { PostViewRenderer } from "./parts/PostViewRenderer.js";
+import { PostViewRenderer } from "./view/PostViewRenderer.js";
 
 export class PostListController{
   constructor(htmlIds, postRepository){
