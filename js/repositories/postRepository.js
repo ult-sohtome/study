@@ -24,7 +24,7 @@ export class PostRepository {
       userName,
       commentText: comment,
       createdAt: new Date().toISOString(),
-      updatedAt: null
+      updatedAt: new Date().toISOString(),
     };
     localStorage.setItem(postKey, JSON.stringify(commentData));
     localStorage.setItem(this.#config.counterKey, nextCount);
@@ -93,7 +93,7 @@ export class PostRepository {
         const createdAt = this.getCommentTime(postKey);
         const userName = this.getUserName(postKey);
         const updatedAt = this.getCommentUpdatedTime(postKey);
-        posts.push({ postKey, comment, postNum, createdAt, userName, updatedAt });
+        posts.push({ postKey, comment, postNum, userName, updatedAt });
       }
     }
     posts.sort((a,b) => a.postNum - b.postNum);

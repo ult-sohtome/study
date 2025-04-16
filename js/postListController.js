@@ -52,19 +52,13 @@ export class PostListController{
     this.postList.innerHTML = "";
     const paginatedPosts = this.paginator.getCurrentPagePosts(page, this.allPosts);
     paginatedPosts.forEach( post => {
-      let postTime;
-      if(post.createdAt) {
-        postTime = post.createdAt;
-      } else {
-        postTime = "----/--/-- --:--:--";
-      }
-      if(post.updatedAt) {
-        postTime = post.updatedAt;
+      if(!post.updatedAt) {
+        post.updatedAt = "----/--/-- --:--:--";
       }
       if(!post.userName) {
         post.userName = "名無し";
       }
-      this.addPostToList(post.postKey, post.userName, post.comment, post.postNum, postTime);
+      this.addPostToList(post.postKey, post.userName, post.comment, post.postNum, post.updatedAt);
     });
   }
 

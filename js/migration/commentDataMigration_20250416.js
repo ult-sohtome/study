@@ -16,7 +16,7 @@ export class CommentDataMigration_20250416 {
       commentText: parsedData.commentText,
       createdAt: parsedData.createdAt,
       userName: parsedData.userName,
-      updatedAt: ""
+      updatedAt: parsedData.createdAt
     };
     localStorage.setItem(key, JSON.stringify(migratedData));
   }
