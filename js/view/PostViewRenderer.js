@@ -219,6 +219,10 @@ export class PostViewRenderer {
     return target.classList.contains("cancelButton");
   }
 
+  static isDeleteButton(target) {
+    return target.classList.contains("deleteButton");
+  }
+
   static isDisabledPostButton(){
     const postButton = this.getPostButton();
     if(postButton.disabled){
