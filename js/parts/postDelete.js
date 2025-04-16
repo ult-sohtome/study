@@ -1,3 +1,5 @@
+import { PostViewRenderer } from "../view/PostViewRenderer.js";
+
 export class PostDelete {
   constructor(postRepository, postListController){
     this.postRepository = postRepository;
@@ -22,9 +24,10 @@ export class PostDelete {
 
   setupEventListeners(){
     this.postList.addEventListener("click", e => {
-      if(e.target.classList.contains("deleteButton")) {
-        const postKey = e.target.dataset.key;
-        const li = e.target.closest("li");
+      const target = e.target;
+      if(PostViewRenderer.isDeleteButton(target)) {
+        const postKey = PostViewRenderer.getPostKeyFromTarget(target);
+        const li = PostViewRenderer.findLiElementFromTarget(target);
 
         if(postKey && li){
           this.deleteComment(postKey, li);

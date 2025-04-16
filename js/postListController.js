@@ -1,4 +1,5 @@
 import { Paginator } from "./common/paginator.js";
+import { PostViewRenderer } from "./view/PostViewRenderer.js";
 
 export class PostListController{
   constructor(htmlIds, postRepository){
@@ -22,36 +23,26 @@ export class PostListController{
 
   addPostToList(key, userName, comment, postNum, time){
     const li = document.createElement('li');
-    const div = document.createElement('div');
-    div.className = 'postText';
+    const postContent = document.createElement('div');
+    postContent.className = 'postContent';
+    const postText = document.createElement('div');
+    postText.className = 'postText';
 
-    const spanTime = document.createElement('span');
-    spanTime.className = 'time';
-    spanTime.textContent = `[${time}]`;
-
-    const spanUsername = document.createElement('span');
-    spanUsername.className = 'userName';
-    spanUsername.textContent = `${userName}さん`;
+    const spanTime = PostViewRenderer.createSpanTime(time);
+    const spanUsername = PostViewRenderer.createSpanUserName(userName);
+    const spanKey = PostViewRenderer.createSpanKey(postNum);
+    const spanComment = PostViewRenderer.createSpanComment(comment);
+    const editButton = PostViewRenderer.createEditButton(key);
+    const deleteButton = PostViewRenderer.createDeleteButton(key);
   
-    const spanKey = document.createElement('span');
-    spanKey.className = 'postNum';
-    spanKey.textContent = `${postNum}:`;
-    
-    const spanComment = document.createElement('span');
-    spanComment.textContent = comment;
-  
-    const deleteButton = document.createElement('button');
-    deleteButton.type = 'button';
-    deleteButton.textContent = '削除';
-    deleteButton.className = 'deleteButton';
-    deleteButton.setAttribute("data-key", key);
-  
-    div.appendChild(spanTime);
-    div.appendChild(spanUsername);
-    div.appendChild(spanKey);
-    div.appendChild(spanComment);
-    li.appendChild(div);
-    li.appendChild(deleteButton);
+    postText.appendChild(spanTime);
+    postText.appendChild(spanUsername);
+    postText.appendChild(spanKey);
+    postText.appendChild(spanComment);
+    postContent.appendChild(postText);
+    postContent.appendChild(editButton);
+    postContent.appendChild(deleteButton);
+    li.appendChild(postContent);
   
     this.postList.insertBefore(li, this.postList.firstChild);
   }
@@ -61,13 +52,13 @@ export class PostListController{
     this.postList.innerHTML = "";
     const paginatedPosts = this.paginator.getCurrentPagePosts(page, this.allPosts);
     paginatedPosts.forEach( post => {
-      if(!post.createdAt) {
-        post.createdAt = "----/--/-- --:--:--";
+      if(!post.updatedAt) {
+        post.updatedAt = "----/--/-- --:--:--";
       }
       if(!post.userName) {
         post.userName = "名無し";
       }
-      this.addPostToList(post.postKey, post.userName, post.comment, post.postNum, post.createdAt);
+      this.addPostToList(post.postKey, post.userName, post.comment, post.postNum, post.updatedAt);
     });
   }
 
@@ -76,5 +67,6 @@ export class PostListController{
     this.currentPage = page;
     this.loadCurrentPagePosts(this.currentPage);
     this.paginator.updatePostPage(this.allPosts, this.currentPage);
+    PostViewRenderer.switchEnabledPostButton();
   }
 }

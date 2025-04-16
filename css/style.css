@@ -58,12 +58,16 @@ p {
   margin: 5px;
   padding: 3px;
   border-radius: 0;
-  width: auto;
+  width: fit-content;
   height: auto;
 }
 
 input[type="submit"] {
   padding: 10px;
+}
+
+input[type="submit"]:disabled {
+  cursor: not-allowed;
 }
 
 .createPost {
@@ -102,8 +106,7 @@ ul {
 
 li {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   background: white;
   padding: 10px;
   border-bottom: 1px solid #ddd;
@@ -111,13 +114,22 @@ li {
 }
 
 li span {
-  /* margin-right: 2rem; */
   font-size: 1.5rem;
   word-break: break-all;
   min-width: 10ch;
 }
 
+.postContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
 .postText {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
   justify-content: flex-start;
   align-items: flex-start;
   margin: 0;
@@ -135,6 +147,43 @@ li span {
 
 .postText .postNum {
   min-width: 3ch;
+}
+
+.editUserName {
+  border: #000 solid 1px;
+  border-radius: 5px;
+}
+
+.editButton {
+  background: #0000ff;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  flex: none;
+  margin-right: 3px;
+}
+
+.saveButton {
+  background: #1d6c29;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  flex: none;
+  margin: 0 3px;
+}
+
+.cancelButton {
+  background: #f9c121;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  flex: none;
 }
 
 .deleteButton {
@@ -193,6 +242,12 @@ li span {
   border: none;
 }
 
+.disabled-button {
+  background: #666;
+  color: #ffffff;
+  cursor: not-allowed !important;
+}
+
 @media screen and (max-width: 800px) {
   div {
     flex-direction: column;
@@ -221,7 +276,7 @@ li span {
     font-size: 1.2rem;
   }
 
-  .deleteButton {
+  .saveButton .cancelButton {
     margin-top: 10px;
   }
 
@@ -240,9 +295,12 @@ li span {
     margin: 5px;
   }
 
+  .postContent {
+    align-items: flex-start;
+  }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 500px) {
   h1 {
     font-size: 3rem;
   }
@@ -271,6 +329,22 @@ li span {
 
   .deleteButton {
     font-size: 1rem;
+    margin: 1px;
+  }
+
+  .editButton {
+    font-size: 1rem;
+    margin: 1px;
+  }
+
+  .cancelButton {
+    font-size: 1rem;
+    margin: 1px;
+  }
+
+  .saveButton {
+    font-size: 1rem;
+    margin: 1px;
   }
 
   li {
