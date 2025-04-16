@@ -14,9 +14,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     postButtonId: "postButton",
     prevButtonId: "prevBtn",
     paginateId: "pagination",
-    nextButtonId: "nextBtn",
-    errorNameId: "usernameError",
-    errorCommentId: "commentError"
+    nextButtonId: "nextBtn"
   };
   const postRepository = new PostRepository();
   runMigrations(postRepository);

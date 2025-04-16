@@ -96,6 +96,16 @@ export class PostViewRenderer {
     liElement.insertBefore(errorComment, postContent);
   }
 
+  static addErrorMessageIntoCreatePost() {
+    const createPostContent = this.getCreatePostContent();
+    const setNameContent = document.querySelector(".setUsername");
+    const setCommentContent = document.querySelector(".setComment");
+    const errorName = this.createErrorNameMessage();
+    const errorComment = this.createErrorCommentMessage();
+    createPostContent.insertBefore(errorName, setNameContent);
+    createPostContent.insertBefore(errorComment, setCommentContent);
+  }
+
   static initErrorMessage(liElement) {
     const errorNameElem = this.getErrorNameElem(liElement);
     const errorCommentElem = this.getErrorCommentElem(liElement);
@@ -108,6 +118,14 @@ export class PostViewRenderer {
   static showErrorMessage(errorElem, errorMessage) {
     errorElem.textContent = errorMessage;
     errorElem.style.display = "block";
+  }
+
+  static getHtmlElem(getHtmlElemId) {
+    return document.getElementById(getHtmlElemId);
+  }
+
+  static getCreatePostContent() {
+    return document.querySelector(".createPost");
   }
 
   static getErrorNameElem(liElement) {

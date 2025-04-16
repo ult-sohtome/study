@@ -1,35 +1,40 @@
 import { PostValidation } from "../validation/postValidation.js";
+import { PostViewRenderer } from "../view/PostViewRenderer.js";
 
 export class PostCreate {
   constructor(htmlIds, postRepository, postListController, userNameRepository){
     this.postRepository = postRepository;
     this.postListController = postListController;
     this.userNameRepository = userNameRepository;
-    this.commentInput = document.getElementById(htmlIds.commentInputId);
-    this.userName = document.getElementById(htmlIds.userNameId);
-    this.postButton = document.getElementById(htmlIds.postButtonId);
-    this.errorNameElem = document.getElementById(htmlIds.errorNameId);
-    this.errorCommentElem = document.getElementById(htmlIds.errorCommentId);
+    this.commentInput = PostViewRenderer.getHtmlElem(htmlIds.commentInputId);
+    this.userName = PostViewRenderer.getHtmlElem(htmlIds.userNameId);
+    this.postButton = PostViewRenderer.getHtmlElem(htmlIds.postButtonId);
     this.setupEventListeners();
   }
 
   createComment(){
     const comment = this.commentInput.value.trim();
     const userName = this.userName.value.trim();
-    this.clearFormErrors();
+    PostViewRenderer.addErrorMessageIntoCreatePost();
+    const createPostContent = PostViewRenderer.getCreatePostContent();
+    PostViewRenderer.initErrorMessage(createPostContent);
     let isValid = true;
 
     const userNameValidation = PostValidation.validateUserName(userName);
     if(!userNameValidation.isValid){
-      this.errorNameElem.textContent = userNameValidation.errorMessage;
-      this.errorNameElem.style.display = "inline-block";
+      PostViewRenderer.showErrorMessage(
+        PostViewRenderer.getErrorNameElem(createPostContent),
+        userNameValidation.errorMessage
+      );
       isValid = false;
     }
 
     const commentValidation = PostValidation.validateCreateComment(comment);
     if(!commentValidation.isValid){
-      this.errorCommentElem.textContent = commentValidation.errorMessage;
-      this.errorCommentElem.style.display = "inline-block";
+      PostViewRenderer.showErrorMessage(
+        PostViewRenderer.getErrorCommentElem(createPostContent),
+        commentValidation.errorMessage
+      );
       isValid = false;
     }
 
@@ -43,13 +48,6 @@ export class PostCreate {
     const totalPages = this.postListController.paginator.totalPages(this.postListController.allPosts);
     this.postListController.refreshPostList(totalPages);
     this.commentInput.value = "";
-  }
-
-  clearFormErrors(){
-    this.errorNameElem.textContent = "";
-    this.errorCommentElem.textContent = "";
-    this.errorCommentElem.style.display = "none";
-    this.errorNameElem.style.display = "none";
   }
 
   setupEventListeners(){
