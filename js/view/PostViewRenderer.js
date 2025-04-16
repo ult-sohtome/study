@@ -136,6 +136,14 @@ export class PostViewRenderer {
     return postText.querySelector(".editCommentText").value.trim();
   }
 
+  static getDeleteButtons(){
+    return document.querySelectorAll(".deleteButton");
+  }
+
+  static getEditButtons(){
+    return document.querySelectorAll(".editButton");
+  }
+
   static switchEditMode(postKey, liElement) {
     const postContent = this.getPostContentElem(liElement);
     const postText = this.getPostTextElem(liElement);
@@ -191,5 +199,20 @@ export class PostViewRenderer {
   
   static findLiElementFromTarget(target) {
     return target.closest("li");
+  }
+
+  static switchDisabledButtons(postKey) {
+    const deleteButtons = this.getDeleteButtons();
+    const editButtons = this.getEditButtons();
+    deleteButtons.forEach(button => {
+      if(button.dataset.key !== postKey){
+        button.disabled = true;
+      }
+    });
+    editButtons.forEach(button => {
+      if(button.dataset.key !== postKey){
+        button.disabled = true;
+      }
+    });
   }
 }

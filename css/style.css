@@ -192,6 +192,18 @@ li span {
   flex: none;
 }
 
+.deleteButton:disabled {
+  background: #666;
+  color: #ffffff;
+  cursor: not-allowed;
+}
+
+.editButton:disabled {
+  background: #666;
+  color: #ffffff;
+  cursor: not-allowed;
+}
+
 #paginationContainer {
   display: flex;
   justify-content: center;

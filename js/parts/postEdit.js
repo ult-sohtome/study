@@ -49,6 +49,7 @@ export class PostEdit {
 
         if(postKey && li){
           this.editPost(postKey, li);
+          PostViewRenderer.switchDisabledButtons(postKey);
         }
       }
       if(PostViewRenderer.isSaveButton(target)) {
