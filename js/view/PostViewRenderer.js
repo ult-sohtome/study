@@ -136,6 +136,14 @@ export class PostViewRenderer {
     return postText.querySelector(".editCommentText").value.trim();
   }
 
+  static getPostButton(){
+    return document.getElementById("postButton");
+  }
+
+  static getPostButtonWrapper(){
+    return document.getElementById("postButtonWrapper");
+  }
+
   static getDeleteButtons(){
     return document.querySelectorAll(".deleteButton");
   }
@@ -193,6 +201,14 @@ export class PostViewRenderer {
     return target.classList.contains("cancelButton");
   }
 
+  static isDisabledPostButton(){
+    const postButton = this.getPostButton();
+    if(postButton.disabled){
+      return true;
+    }
+    return false;
+  }
+
   static getPostKeyFromTarget(target) {
     return target.dataset.key;
   }
@@ -201,18 +217,35 @@ export class PostViewRenderer {
     return target.closest("li");
   }
 
+  static switchDisabledPostButton(){
+    const postButton = this.getPostButton();
+    const postButtonWrapper = this.getPostButtonWrapper();
+    postButton.disabled = true;
+    postButtonWrapper.classList.add("disabled-button");
+  }
+
+  static switchEnabledPostButton(){
+    const postButton = this.getPostButton();
+    const postButtonWrapper = this.getPostButtonWrapper();
+    postButton.disabled = false;
+    postButtonWrapper.classList.remove("disabled-button");
+  }
+
   static switchDisabledButtons(postKey) {
     const deleteButtons = this.getDeleteButtons();
     const editButtons = this.getEditButtons();
     deleteButtons.forEach(button => {
       if(button.dataset.key !== postKey){
         button.disabled = true;
+        button.classList.add("disabled-button");
       }
     });
     editButtons.forEach(button => {
       if(button.dataset.key !== postKey){
         button.disabled = true;
+        button.classList.add("disabled-button");
       }
     });
+    this.switchDisabledPostButton();
   }
 }
