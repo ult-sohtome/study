@@ -67,8 +67,6 @@ export class PostListController{
     this.currentPage = page;
     this.loadCurrentPagePosts(this.currentPage);
     this.paginator.updatePostPage(this.allPosts, this.currentPage);
-    if(PostViewRenderer.isDisabledPostButton()){
-      PostViewRenderer.switchEnabledPostButton();
-    }
+    PostViewRenderer.switchEnabledPostButton();
   }
 }
