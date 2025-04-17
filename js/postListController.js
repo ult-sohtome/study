@@ -21,7 +21,7 @@ export class PostListController{
     this.refreshPostList(this.currentPage);
   }
 
-  addPostToList(key, userName, comment, postNum, time){
+  addPostToList(key, userName, comment, postNum, time, keyWord = ""){
     const li = document.createElement('li');
     const postContent = document.createElement('div');
     postContent.className = 'postContent';
@@ -29,9 +29,9 @@ export class PostListController{
     postText.className = 'postText';
 
     const spanTime = PostViewRenderer.createSpanTime(time);
-    const spanUsername = PostViewRenderer.createSpanUserName(userName);
+    const spanUsername = PostViewRenderer.createSpanUserName(userName, keyWord);
     const spanKey = PostViewRenderer.createSpanKey(postNum);
-    const spanComment = PostViewRenderer.createSpanComment(comment);
+    const spanComment = PostViewRenderer.createSpanComment(comment, keyWord);
     const editButton = PostViewRenderer.createEditButton(key);
     const deleteButton = PostViewRenderer.createDeleteButton(key);
   

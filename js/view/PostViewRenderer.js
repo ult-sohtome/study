@@ -1,15 +1,15 @@
 export class PostViewRenderer {
-  static createSpanUserName(userName) {
+  static createSpanUserName(userName, keyword = "") {
     const spanUsername = document.createElement("span");
     spanUsername.className = "userName";
-    spanUsername.textContent = `${userName}さん`;
+    spanUsername.innerHTML = keyword ? `${this.highlightText(userName, keyword)}さん` : `${userName}さん`;
     return spanUsername;
   }
 
-  static createSpanComment(comment){
+  static createSpanComment(comment, keyword = "") {
     const spanComment = document.createElement("span");
     spanComment.className = "commentText";
-    spanComment.textContent = comment;
+    spanComment.innerHTML = keyword ? this.highlightText(comment, keyword) : comment;
     return spanComment;
   }
 
@@ -170,6 +170,20 @@ export class PostViewRenderer {
     return document.querySelectorAll(".editButton");
   }
 
+  static getPaginationContainer(){
+    return document.getElementById("paginationContainer")
+  }
+
+  static HiddenPagination() {
+    const paiginationContainer = this.getPaginationContainer();
+    paiginationContainer.style.display = "none";
+  }
+
+  static ShowPagination() {
+    const paiginationContainer = this.getPaginationContainer();
+    paiginationContainer.style.display = "";
+  }
+
   static switchEditMode(postKey, liElement) {
     const postContent = this.getPostContentElem(liElement);
     const postText = this.getPostTextElem(liElement);
@@ -269,5 +283,11 @@ export class PostViewRenderer {
       }
     });
     this.switchDisabledPostButton();
+  }
+
+  static highlightText(text, keyword) {
+    const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escapedKeyword})`, "gi");
+    return text.replace(regex, `<mark>$1</mark>`);
   }
 }

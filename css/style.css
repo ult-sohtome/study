@@ -196,6 +196,18 @@ li span {
   flex: none;
 }
 
+#resetButton {
+  margin-left: 10px;
+  background: gray;
+  color: white;
+  border-radius: 5px;
+  border: black solid 1px;
+  padding: 3px;
+  cursor: pointer;
+  flex: none;
+  font-size: 1.3rem;
+}
+
 #paginationContainer {
   display: flex;
   justify-content: center;
@@ -273,7 +285,7 @@ li span {
 }
 
 .sort {
-  margin-top: 10px;
+  margin-bottom: 10px;
   margin-left: 10%;
   align-items: center;
 }
@@ -284,6 +296,11 @@ li span {
   border-radius: 5px;
   line-height: 1.5;
   padding: 3px;
+}
+
+mark {
+  background-color: yellow;
+  font-weight: bold;
 }
 
 @media screen and (max-width: 800px) {
@@ -338,6 +355,11 @@ li span {
   }
 
   #postButton {
+    width: fit-content;
+    padding: 3px;
+  }
+
+  #resetButton {
     width: fit-content;
     padding: 3px;
   }
@@ -401,6 +423,13 @@ li span {
   #postButton {
     width: auto;
     padding: 5px;
+  }
+
+  #resetButton {
+    width: fit-content;
+    padding: 3px;
+    font-size: 1rem;
+    margin: 5px 0;
   }
 
   #postButtonWrapper {

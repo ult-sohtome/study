@@ -5,6 +5,7 @@ import { PostDelete } from './parts/postDelete.js';
 import { PostEdit } from './parts/postEdit.js';
 import { UserNameRepository } from "./repositories/userNameRepository.js";
 import { runMigrations } from "./migration/runMigrations.js";
+import { PostSearch } from "./parts/postSearch.js";
 
 document.addEventListener("DOMContentLoaded", ()=>{
   const htmlIds = {
@@ -14,7 +15,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
     postButtonId: "postButton",
     prevButtonId: "prevBtn",
     paginateId: "pagination",
-    nextButtonId: "nextBtn"
+    nextButtonId: "nextBtn",
+    searchInputId: "searchInput",
+    searchButtonId: "searchButton",
+    resetButtonId: "resetButton"
   };
   const postRepository = new PostRepository();
   runMigrations(postRepository);
@@ -24,6 +28,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   const postCreate = new PostCreate(htmlIds, postRepository, postListController, userNameRepository );
   new PostDelete(postRepository, postListController);
   new PostEdit(postRepository, postListController);
+  new PostSearch(htmlIds, postRepository, postListController);
 
   if(userNameRepository.hasUserName()){
     postCreate.userName.value = userNameRepository.getUserName();
