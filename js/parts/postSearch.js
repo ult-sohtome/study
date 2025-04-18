@@ -1,3 +1,4 @@
+import { PostSearchValidation } from "../validation/postSearchValidation.js";
 import { PostViewRenderer } from "../view/PostViewRenderer.js";
 
 export class PostSearch {
@@ -13,20 +14,34 @@ export class PostSearch {
 
   searchPosts(){
     const keyword = this.searchInput.value.trim();
-    if (!keyword) {
-      alert("検索キーワードを入力してください。");
-      return;
+    const searchContent = PostViewRenderer.getSearchContent();
+    PostViewRenderer.initErrorMessageIntoSearchElem();
+    PostViewRenderer.addErrorMessageIntoSearch();
+    let isValid = true;
+    const postSearchValidation = PostSearchValidation.validateSearchKeyword(keyword);
+    if (!postSearchValidation.isValid) {
+      PostViewRenderer.showErrorMessage(
+        PostViewRenderer.getErrorCommentElem(searchContent),
+        postSearchValidation.errorMessage
+      );
+      isValid = false;
     }
-    this.isSearchMode = true;
     const allPosts = this.postRepository.getAllPosts();
     const filteredPosts = allPosts.filter(post => {
       const userName = post.userName || "";
       return userName.includes(keyword) || post.comment.includes(keyword)
     });
-    if(filteredPosts.length === 0) {
-      alert("指定されたキーワードに該当する投稿は見つかりませんでした。");
-      return;
+    const notSearchPostsValidation = PostSearchValidation.validateNotSearchPosts(filteredPosts);
+    if(!notSearchPostsValidation.isValid) {
+      PostViewRenderer.showErrorMessage(
+        PostViewRenderer.getErrorCommentElem(searchContent),
+        notSearchPostsValidation.errorMessage
+      );
+      isValid = false;
     }
+    if(!isValid) return;
+
+    this.isSearchMode = true;
     this.postListController.postList.innerHTML = "";
     this.postListController.getSortedPosts(filteredPosts);
     filteredPosts.forEach(post => {
@@ -56,6 +71,7 @@ export class PostSearch {
       this.isSearchMode = false;
       this.postListController.refreshPostList(this.postListController.currentPage);
       this.searchInput.value = "";
+      PostViewRenderer.initErrorMessageIntoSearchElem();
       PostViewRenderer.ShowPagination();
     });
   }

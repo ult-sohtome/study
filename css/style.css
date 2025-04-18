@@ -261,7 +261,11 @@ li span {
 }
 
 .search {
+  display: block;
   margin-left: 10%;
+}
+
+.searchContent {
   align-items: center;
 }
 #searchInput {

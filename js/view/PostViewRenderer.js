@@ -106,6 +106,12 @@ export class PostViewRenderer {
     createPostContent.insertBefore(errorComment, setCommentContent);
   }
 
+  static addErrorMessageIntoSearch() {
+    const searchContent = this.getSearchContent();
+    const searchErrorMessageElem = this.createErrorCommentMessage();
+    searchContent.insertBefore(searchErrorMessageElem, searchContent.firstChild);
+  }
+
   static initErrorMessage(liElement) {
     const errorNameElem = this.getErrorNameElem(liElement);
     const errorCommentElem = this.getErrorCommentElem(liElement);
@@ -115,6 +121,14 @@ export class PostViewRenderer {
     errorCommentElem.style.display = "none";
   }
 
+  static initErrorMessageIntoSearchElem() {
+    const searchContent = this.getSearchContent();
+    const searchErrorMessageElem = this.getErrorCommentElem(searchContent);
+    if(searchErrorMessageElem) {
+      searchErrorMessageElem.remove();
+    }
+  }
+
   static showErrorMessage(errorElem, errorMessage) {
     errorElem.textContent = errorMessage;
     errorElem.style.display = "block";
@@ -122,6 +136,14 @@ export class PostViewRenderer {
 
   static getHtmlElem(getHtmlElemId) {
     return document.getElementById(getHtmlElemId);
+  }
+
+  static getSortSeletectElem() {
+    return document.getElementById("sortSelect");
+  }
+
+  static getSearchContent() {
+    return document.querySelector(".search");
   }
 
   static getCreatePostContent() {
