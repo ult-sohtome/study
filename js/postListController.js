@@ -18,6 +18,7 @@ export class PostListController{
     );
     this.allPosts = this.postRepository.getAllPosts();
     this.currentPage = this.paginator.totalPages(this.allPosts);
+    this.sortOrder = "newest";
     this.refreshPostList(this.currentPage);
   }
 
@@ -63,10 +64,23 @@ export class PostListController{
   }
 
   refreshPostList(page){
-    this.allPosts = this.postRepository.getAllPosts();
+    this.allPosts = this.getSortedPosts();
     this.currentPage = page;
     this.loadCurrentPagePosts(this.currentPage);
     this.paginator.updatePostPage(this.allPosts, this.currentPage);
     PostViewRenderer.switchEnabledPostButton();
+  }
+
+  setSortOrder(order) {
+    this.sortOrder = order;
+  }
+
+  getSortedPosts() {
+    const posts = this.postRepository.getAllPosts();
+    if (this.sortOrder === "oldest") {
+      return posts.sort((a, b) => b.postNum - a.postNum);
+    } else {
+      return posts.sort((a, b) => a.postNum - b.postNum);
+    }
   }
 }

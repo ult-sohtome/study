@@ -95,7 +95,6 @@ export class PostRepository {
         posts.push({ postKey, comment, postNum, userName, updatedAt });
       }
     }
-    posts.sort((a,b) => a.postNum - b.postNum);
     return posts;
   }
 
