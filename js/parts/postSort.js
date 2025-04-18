@@ -1,7 +1,8 @@
 export class PostSort {
-  constructor(postRepository, postListController){
+  constructor(postRepository, postListController, postSearch){
     this.postRepository = postRepository;
     this.postListController = postListController;
+    this.postSearch = postSearch;
     this.sortSelect = document.getElementById("sortSelect");
     this.setupEventListeners();
   }
@@ -9,6 +10,10 @@ export class PostSort {
   handleSortChange(){
     const selected = this.sortSelect.value;
     this.postListController.setSortOrder(selected);
+    if(this.postSearch.isSearchMode){
+      this.postSearch.searchPosts();
+      return;
+    }
     this.postListController.refreshPostList(this.postListController.currentPage);
   }
 

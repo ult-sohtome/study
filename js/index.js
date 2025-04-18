@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   const postSearch = new PostSearch(htmlIds, postRepository, postListController);
   new PostDelete(postRepository, postListController, postSearch);
   new PostEdit(postRepository, postListController, postSearch);
-  new PostSort(postRepository, postListController);
+  new PostSort(postRepository, postListController, postSearch);
 
   if(userNameRepository.hasUserName()){
     postCreate.userName.value = userNameRepository.getUserName();

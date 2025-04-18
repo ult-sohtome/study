@@ -28,6 +28,7 @@ export class PostSearch {
       return;
     }
     this.postListController.postList.innerHTML = "";
+    this.postListController.getSortedPosts(filteredPosts);
     filteredPosts.forEach(post => {
       if(!post.updatedAt) {
         post.updatedAt = "----/--/-- --:--:--";

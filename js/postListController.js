@@ -64,7 +64,8 @@ export class PostListController{
   }
 
   refreshPostList(page){
-    this.allPosts = this.getSortedPosts();
+    const posts = this.postRepository.getAllPosts();
+    this.allPosts = this.getSortedPosts(posts);
     this.currentPage = page;
     this.loadCurrentPagePosts(this.currentPage);
     this.paginator.updatePostPage(this.allPosts, this.currentPage);
@@ -75,8 +76,7 @@ export class PostListController{
     this.sortOrder = order;
   }
 
-  getSortedPosts() {
-    const posts = this.postRepository.getAllPosts();
+  getSortedPosts(posts) {
     if (this.sortOrder === "oldest") {
       return posts.sort((a, b) => b.postNum - a.postNum);
     } else {
