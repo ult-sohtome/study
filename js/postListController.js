@@ -69,6 +69,8 @@ export class PostListController{
     this.loadCurrentPagePosts(this.currentPage);
     this.paginator.updatePostPage(this.allPosts, this.currentPage);
     PostViewRenderer.switchEnabledPostButton();
+    PostViewRenderer.switchEnabledSearchButton();
+    PostViewRenderer.switchEnabledResetButton();
   }
 
   setSortOrder(order) {

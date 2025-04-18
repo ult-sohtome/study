@@ -174,6 +174,14 @@ export class PostViewRenderer {
     return document.getElementById("paginationContainer")
   }
 
+  static getSearchButton(){
+    return document.getElementById("searchButton");
+  }
+
+  static getResetButton(){
+    return document.getElementById("resetButton");
+  }
+
   static HiddenPagination() {
     const paiginationContainer = this.getPaginationContainer();
     paiginationContainer.style.display = "none";
@@ -267,6 +275,30 @@ export class PostViewRenderer {
     postButtonWrapper.classList.remove("disabled-button");
   }
 
+  static switchDisabledSearchButton() {
+    const searchButton = this.getSearchButton();
+    searchButton.disabled = true;
+    searchButton.classList.add("disabled-button");
+  }
+
+  static switchEnabledSearchButton() {
+    const searchButton = this.getSearchButton();
+    searchButton.disabled = false;
+    searchButton.classList.remove("disabled-button");
+  }
+
+  static switchDisabledResetButton() {
+    const resetButton = this.getResetButton();
+    resetButton.disabled = true;
+    resetButton.classList.add("disabled-button");
+  }
+
+  static switchEnabledResetButton() {
+    const resetButton = this.getResetButton();
+    resetButton.disabled = false;
+    resetButton.classList.remove("disabled-button");
+  }
+
   static switchDisabledButtons(postKey) {
     const deleteButtons = this.getDeleteButtons();
     const editButtons = this.getEditButtons();
@@ -283,6 +315,8 @@ export class PostViewRenderer {
       }
     });
     this.switchDisabledPostButton();
+    this.switchDisabledSearchButton();
+    this.switchDisabledResetButton();
   }
 
   static highlightText(text, keyword) {

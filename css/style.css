@@ -255,7 +255,7 @@ li span {
 }
 
 .disabled-button {
-  background: #666;
+  background: #666 !important;
   color: #ffffff;
   cursor: not-allowed !important;
 }
