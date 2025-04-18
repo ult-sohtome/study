@@ -1,9 +1,10 @@
 import { PostViewRenderer } from "../view/PostViewRenderer.js";
 
 export class PostDelete {
-  constructor(postRepository, postListController){
+  constructor(postRepository, postListController, postSearch){
     this.postRepository = postRepository;
     this.postListController = postListController;
+    this.postSearch = postSearch;
     this.postList = this.postListController.postList;
     this.setupEventListeners();
   }
@@ -13,6 +14,10 @@ export class PostDelete {
     liElement.remove();
     if(!this.postRepository.hasComments()){
       this.postRepository.clearCounter();
+    }
+    if(this.postSearch.isSearchMode){
+      this.postSearch.searchPosts();
+      return;
     }
     this.postListController.allPosts = this.postRepository.getAllPosts();
     const totalPages = this.postListController.paginator.totalPages(this.postListController.allPosts);

@@ -319,6 +319,12 @@ export class PostViewRenderer {
     this.switchDisabledResetButton();
   }
 
+  static switchEnabledButtons() {
+    this.switchEnabledPostButton();
+    this.switchEnabledSearchButton();
+    this.switchEnabledResetButton();
+  }
+
   static highlightText(text, keyword) {
     const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`(${escapedKeyword})`, "gi");

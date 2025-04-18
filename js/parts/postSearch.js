@@ -8,6 +8,7 @@ export class PostSearch {
     this.searchButton = PostViewRenderer.getHtmlElem(htmlIds.searchButtonId);
     this.resetButton = PostViewRenderer.getHtmlElem(htmlIds.resetButtonId);
     this.setupEventListeners();
+    this.isSearchMode = false;
   }
 
   searchPosts(){
@@ -16,6 +17,7 @@ export class PostSearch {
       alert("検索キーワードを入力してください。");
       return;
     }
+    this.isSearchMode = true;
     const allPosts = this.postRepository.getAllPosts();
     const filteredPosts = allPosts.filter(post => {
       const userName = post.userName || "";
@@ -50,6 +52,7 @@ export class PostSearch {
       this.searchPosts();
     });
     this.resetButton.addEventListener("click", () => {
+      this.isSearchMode = false;
       this.postListController.refreshPostList(this.postListController.currentPage);
       this.searchInput.value = "";
       PostViewRenderer.ShowPagination();
