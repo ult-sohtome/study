@@ -50,15 +50,10 @@ export class PostListController{
 
   loadCurrentPagePosts(page){
     this.currentPage = page;
-    this.postList.innerHTML = "";
+    PostViewRenderer.clearInnerHTML(this.postList);
     const paginatedPosts = this.paginator.getCurrentPagePosts(page, this.allPosts);
     paginatedPosts.forEach( post => {
-      if(!post.updatedAt) {
-        post.updatedAt = "----/--/-- --:--:--";
-      }
-      if(!post.userName) {
-        post.userName = "名無し";
-      }
+      this.setDefaultPostValues(post);
       this.addPostToList(post.postKey, post.userName, post.comment, post.postNum, post.updatedAt);
     });
   }
@@ -81,6 +76,15 @@ export class PostListController{
       return posts.sort((a, b) => b.postNum - a.postNum);
     } else {
       return posts.sort((a, b) => a.postNum - b.postNum);
+    }
+  }
+
+  setDefaultPostValues(post){
+    if(!post.updatedAt) {
+      post.updatedAt = "----/--/-- --:--:--";
+    }
+    if(!post.userName) {
+      post.userName = "名無し";
     }
   }
 }

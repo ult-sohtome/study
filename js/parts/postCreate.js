@@ -47,7 +47,7 @@ export class PostCreate {
     this.postListController.allPosts = this.postRepository.getAllPosts();
     const totalPages = this.postListController.paginator.totalPages(this.postListController.allPosts);
     this.postListController.refreshPostList(totalPages);
-    this.commentInput.value = "";
+    PostViewRenderer.clearValueElem(this.commentInput);
   }
 
   setupEventListeners(){

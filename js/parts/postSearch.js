@@ -42,15 +42,10 @@ export class PostSearch {
     if(!isValid) return;
 
     this.isSearchMode = true;
-    this.postListController.postList.innerHTML = "";
+    PostViewRenderer.clearInnerHTML(this.postListController.postList);
     this.postListController.getSortedPosts(filteredPosts);
     filteredPosts.forEach(post => {
-      if(!post.updatedAt) {
-        post.updatedAt = "----/--/-- --:--:--";
-      }
-      if(!post.userName) {
-        post.userName = "名無し";
-      }
+      this.postListController.setDefaultPostValues(post);
       this.postListController.addPostToList(
         post.postKey,
         post.userName,
@@ -70,7 +65,7 @@ export class PostSearch {
     this.resetButton.addEventListener("click", () => {
       this.isSearchMode = false;
       this.postListController.refreshPostList(this.postListController.currentPage);
-      this.searchInput.value = "";
+      PostViewRenderer.clearValueElem(this.searchInput);
       PostViewRenderer.initErrorMessageIntoSearchElem();
       PostViewRenderer.ShowPagination();
     });

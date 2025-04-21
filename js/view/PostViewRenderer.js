@@ -352,4 +352,12 @@ export class PostViewRenderer {
     const regex = new RegExp(`(${escapedKeyword})`, "gi");
     return text.replace(regex, `<mark>$1</mark>`);
   }
+
+  static clearValueElem(elem) {
+    elem.value = "";
+  }
+
+  static clearInnerHTML(elem) {
+    elem.innerHTML = "";
+  }
 }
