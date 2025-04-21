@@ -17,29 +17,25 @@ export class PostSearch {
     const searchContent = PostViewRenderer.getSearchContent();
     PostViewRenderer.initErrorMessageIntoSearchElem();
     PostViewRenderer.addErrorMessageIntoSearch();
-    let isValid = true;
     const postSearchValidation = PostSearchValidation.validateSearchKeyword(keyword);
     if (!postSearchValidation.isValid) {
       PostViewRenderer.showErrorMessage(
         PostViewRenderer.getErrorCommentElem(searchContent),
         postSearchValidation.errorMessage
       );
-      isValid = false;
+      return;
     }
     const allPosts = this.postRepository.getAllPosts();
     const filteredPosts = allPosts.filter(post => {
       const userName = post.userName || "";
       return userName.includes(keyword) || post.comment.includes(keyword)
     });
-    const notSearchPostsValidation = PostSearchValidation.validateNotSearchPosts(filteredPosts);
-    if(!notSearchPostsValidation.isValid) {
-      PostViewRenderer.showErrorMessage(
-        PostViewRenderer.getErrorCommentElem(searchContent),
-        notSearchPostsValidation.errorMessage
-      );
-      isValid = false;
+
+    if(filteredPosts.length === 0) {
+      PostViewRenderer.clearInnerHTML(this.postListController.postList);
+      PostViewRenderer.addSearchResultMessage(this.postListController.postList);
+      return;
     }
-    if(!isValid) return;
 
     this.isSearchMode = true;
     PostViewRenderer.clearInnerHTML(this.postListController.postList);

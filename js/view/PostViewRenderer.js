@@ -41,6 +41,14 @@ export class PostViewRenderer {
     return textAreaComment;
   }
 
+  static createLiElem() {
+    return document.createElement('li');
+  }
+
+  static createDivElem() {
+    return document.createElement('div');
+  }
+
   static createEditButton(postKey) {
     const editButton = document.createElement("button");
     editButton.type = "button";
@@ -110,6 +118,16 @@ export class PostViewRenderer {
     const searchContent = this.getSearchContent();
     const searchErrorMessageElem = this.createErrorCommentMessage();
     searchContent.insertBefore(searchErrorMessageElem, searchContent.firstChild);
+  }
+
+  static addSearchResultMessage(postListElem) {
+    const li = this.createLiElem();
+    const postContent = this.createDivElem();
+    postContent.className = 'postContent';
+    postContent.textContent = "指定されたキーワードに該当する投稿は見つかりませんでした。";
+    postContent.style.justifyContent = "center";
+    li.appendChild(postContent);
+    postListElem.insertBefore(li, postListElem.firstChild);
   }
 
   static initErrorMessage(liElement) {

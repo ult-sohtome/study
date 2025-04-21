@@ -8,14 +8,4 @@ export class PostSearchValidation {
     }
     return { isValid: true };
   }
-
-  static validateNotSearchPosts(filteredPosts) {
-    if (filteredPosts.length === 0) {
-      return {
-        isValid: false,
-        errorMessage: "指定されたキーワードに該当する投稿は見つかりませんでした。"
-      };
-    }
-    return { isValid: true };
-  }
 }
