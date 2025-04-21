@@ -91,8 +91,9 @@ export class PostRepository {
         const comment = this.getComment(postKey);
         const postNum = this.getPostNumberFromKey(postKey);
         const userName = this.getUserName(postKey);
+        const createdAt = this.getCommentTime(postKey);
         const updatedAt = this.getCommentUpdatedTime(postKey);
-        posts.push({ postKey, comment, postNum, userName, updatedAt });
+        posts.push({ postKey, comment, postNum, userName, createdAt, updatedAt });
       }
     }
     return posts;

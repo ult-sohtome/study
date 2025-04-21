@@ -72,11 +72,25 @@ export class PostListController{
   }
 
   getSortedPosts(posts) {
-    if (this.sortOrder === "oldest") {
-      return posts.sort((a, b) => b.postNum - a.postNum);
-    } else {
-      return posts.sort((a, b) => a.postNum - b.postNum);
-    }
+    return posts.sort((a, b) => {
+      const aHasDate = a.createdAt && a.createdAt !== "";
+      const bHasDate = b.createdAt && b.createdAt !== "";
+
+      if (!aHasDate && !bHasDate) {
+        return this.sortOrder === "oldest"
+          ? b.postNum - a.postNum
+          : a.postNum - b.postNum;
+      }
+      if (!aHasDate) return this.sortOrder === "oldest" ? 1 : -1;
+      if (!bHasDate) return this.sortOrder === "oldest" ? -1 : 1;
+
+      const aDate = new Date(a.createdAt);
+      const bDate = new Date(b.createdAt);
+  
+      return this.sortOrder === "oldest"
+        ? bDate - aDate
+        : aDate - bDate;
+    });
   }
 
   setDefaultPostValues(post){
