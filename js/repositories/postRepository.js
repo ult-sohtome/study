@@ -90,13 +90,12 @@ export class PostRepository {
       if(postKey && postKey.startsWith(this.#config.commentPrefix)){
         const comment = this.getComment(postKey);
         const postNum = this.getPostNumberFromKey(postKey);
-        const createdAt = this.getCommentTime(postKey);
         const userName = this.getUserName(postKey);
+        const createdAt = this.getCommentTime(postKey);
         const updatedAt = this.getCommentUpdatedTime(postKey);
-        posts.push({ postKey, comment, postNum, userName, updatedAt });
+        posts.push({ postKey, comment, postNum, userName, createdAt, updatedAt });
       }
     }
-    posts.sort((a,b) => a.postNum - b.postNum);
     return posts;
   }
 

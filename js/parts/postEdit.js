@@ -2,10 +2,11 @@ import { PostValidation } from "../validation/postValidation.js";
 import { PostViewRenderer } from "../view/PostViewRenderer.js";
 
 export class PostEdit {
-  constructor(postRepository, postListController){
+  constructor(postRepository, postListController, postSearch){
     this.postRepository = postRepository;
     this.postListController = postListController;
     this.postList = this.postListController.postList;
+    this.postSearch = postSearch;
     this.setupEventListeners();
   }
 
@@ -36,6 +37,12 @@ export class PostEdit {
     if(!isValid) return;
 
     this.postRepository.updateComment(postKey, editUserName, editComment);
+
+    if(this.postSearch.isSearchMode){
+      PostViewRenderer.switchTextMode(liElement, this.postSearch.keyword);
+      PostViewRenderer.switchEnabledAllButtons();
+      return;
+    }
     PostViewRenderer.switchTextMode(liElement);
     this.postListController.refreshPostList(this.postListController.currentPage);
   }
@@ -61,6 +68,11 @@ export class PostEdit {
         }
       }
       if(PostViewRenderer.isCancelButton(target)) {
+        if(this.postSearch.isSearchMode){
+          this.postSearch.searchPosts();
+          PostViewRenderer.switchEnabledButtons();
+          return;
+        }
         this.postListController.refreshPostList(this.postListController.currentPage);
       }
     });

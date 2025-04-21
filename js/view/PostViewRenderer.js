@@ -1,15 +1,15 @@
 export class PostViewRenderer {
-  static createSpanUserName(userName) {
+  static createSpanUserName(userName, keyword = "") {
     const spanUsername = document.createElement("span");
     spanUsername.className = "userName";
-    spanUsername.textContent = `${userName}さん`;
+    spanUsername.innerHTML = keyword ? `${this.highlightText(userName, keyword)}さん` : `${userName}さん`;
     return spanUsername;
   }
 
-  static createSpanComment(comment){
+  static createSpanComment(comment, keyword = "") {
     const spanComment = document.createElement("span");
     spanComment.className = "commentText";
-    spanComment.textContent = comment;
+    spanComment.innerHTML = keyword ? this.highlightText(comment, keyword) : comment;
     return spanComment;
   }
 
@@ -39,6 +39,14 @@ export class PostViewRenderer {
     textAreaComment.value = currentComment;
     textAreaComment.className = "editCommentText";
     return textAreaComment;
+  }
+
+  static createLiElem() {
+    return document.createElement('li');
+  }
+
+  static createDivElem() {
+    return document.createElement('div');
   }
 
   static createEditButton(postKey) {
@@ -106,6 +114,22 @@ export class PostViewRenderer {
     createPostContent.insertBefore(errorComment, setCommentContent);
   }
 
+  static addErrorMessageIntoSearch() {
+    const searchContent = this.getSearchContent();
+    const searchErrorMessageElem = this.createErrorCommentMessage();
+    searchContent.insertBefore(searchErrorMessageElem, searchContent.firstChild);
+  }
+
+  static addSearchResultMessage(postListElem) {
+    const li = this.createLiElem();
+    const postContent = this.createDivElem();
+    postContent.className = 'postContent';
+    postContent.textContent = "指定されたキーワードに該当する投稿は見つかりませんでした。";
+    postContent.style.justifyContent = "center";
+    li.appendChild(postContent);
+    postListElem.insertBefore(li, postListElem.firstChild);
+  }
+
   static initErrorMessage(liElement) {
     const errorNameElem = this.getErrorNameElem(liElement);
     const errorCommentElem = this.getErrorCommentElem(liElement);
@@ -115,6 +139,14 @@ export class PostViewRenderer {
     errorCommentElem.style.display = "none";
   }
 
+  static initErrorMessageIntoSearchElem() {
+    const searchContent = this.getSearchContent();
+    const searchErrorMessageElem = this.getErrorCommentElem(searchContent);
+    if(searchErrorMessageElem) {
+      searchErrorMessageElem.remove();
+    }
+  }
+
   static showErrorMessage(errorElem, errorMessage) {
     errorElem.textContent = errorMessage;
     errorElem.style.display = "block";
@@ -122,6 +154,14 @@ export class PostViewRenderer {
 
   static getHtmlElem(getHtmlElemId) {
     return document.getElementById(getHtmlElemId);
+  }
+
+  static getSortSeletectElem() {
+    return document.getElementById("sortSelect");
+  }
+
+  static getSearchContent() {
+    return document.querySelector(".search");
   }
 
   static getCreatePostContent() {
@@ -170,6 +210,28 @@ export class PostViewRenderer {
     return document.querySelectorAll(".editButton");
   }
 
+  static getPaginationContainer(){
+    return document.getElementById("paginationContainer")
+  }
+
+  static getSearchButton(){
+    return document.getElementById("searchButton");
+  }
+
+  static getResetButton(){
+    return document.getElementById("resetButton");
+  }
+
+  static HiddenPagination() {
+    const paiginationContainer = this.getPaginationContainer();
+    paiginationContainer.style.display = "none";
+  }
+
+  static ShowPagination() {
+    const paiginationContainer = this.getPaginationContainer();
+    paiginationContainer.style.display = "";
+  }
+
   static switchEditMode(postKey, liElement) {
     const postContent = this.getPostContentElem(liElement);
     const postText = this.getPostTextElem(liElement);
@@ -190,18 +252,22 @@ export class PostViewRenderer {
     postContent.replaceChild(cancelButton, postContent.querySelector(".deleteButton"));
   }
 
-  static switchTextMode(liElement) {
+  static switchTextMode(liElement, keyword = "") {
     const postContent = this.getPostContentElem(liElement);
     const postText = this.getPostTextElem(liElement);
-    
     const editUserName = this.getEditUserName(liElement);
     const editComment = this.getEditComment(liElement);
-    
+    const postKey = this.getPostKeyFromTarget(postContent.querySelector(".saveButton"));
+    const spanUsername = this.createSpanUserName(editUserName, keyword);
+    const spanComment = this.createSpanComment(editComment, keyword);
+    const editButton = this.createEditButton(postKey);
+    const deleteButton = this.createDeleteButton(postKey);
+
     postContent.removeChild(liElement.querySelector(".saveButton"));
     postContent.removeChild(liElement.querySelector(".cancelButton"));
 
-    const spanUsername = this.createSpanUserName(editUserName);
-    const spanComment = this.createSpanComment(editComment);
+    postContent.appendChild(editButton);
+    postContent.appendChild(deleteButton);
 
     postText.replaceChild(spanUsername, postText.querySelector(".editUserName"));
     postText.replaceChild(spanComment, postText.querySelector(".editCommentText"));
@@ -253,6 +319,30 @@ export class PostViewRenderer {
     postButtonWrapper.classList.remove("disabled-button");
   }
 
+  static switchDisabledSearchButton() {
+    const searchButton = this.getSearchButton();
+    searchButton.disabled = true;
+    searchButton.classList.add("disabled-button");
+  }
+
+  static switchEnabledSearchButton() {
+    const searchButton = this.getSearchButton();
+    searchButton.disabled = false;
+    searchButton.classList.remove("disabled-button");
+  }
+
+  static switchDisabledResetButton() {
+    const resetButton = this.getResetButton();
+    resetButton.disabled = true;
+    resetButton.classList.add("disabled-button");
+  }
+
+  static switchEnabledResetButton() {
+    const resetButton = this.getResetButton();
+    resetButton.disabled = false;
+    resetButton.classList.remove("disabled-button");
+  }
+
   static switchDisabledButtons(postKey) {
     const deleteButtons = this.getDeleteButtons();
     const editButtons = this.getEditButtons();
@@ -269,5 +359,41 @@ export class PostViewRenderer {
       }
     });
     this.switchDisabledPostButton();
+    this.switchDisabledSearchButton();
+    this.switchDisabledResetButton();
+  }
+
+  static switchEnabledButtons() {
+    this.switchEnabledPostButton();
+    this.switchEnabledSearchButton();
+    this.switchEnabledResetButton();
+  }
+
+  static switchEnabledAllButtons() {
+    const deleteButtons = this.getDeleteButtons();
+    const editButtons = this.getEditButtons();
+    deleteButtons.forEach(button => {
+      button.disabled = false;
+      button.classList.remove("disabled-button");
+    });
+    editButtons.forEach(button => {
+      button.disabled = false;
+      button.classList.remove("disabled-button");
+    });
+    this.switchEnabledButtons();
+  }
+
+  static highlightText(text, keyword) {
+    const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escapedKeyword})`, "gi");
+    return text.replace(regex, `<mark>$1</mark>`);
+  }
+
+  static clearValueElem(elem) {
+    elem.value = "";
+  }
+
+  static clearInnerHTML(elem) {
+    elem.innerHTML = "";
   }
 }

@@ -27,6 +27,22 @@
       </div>
     </div>
     <div class="separator"></div>
+    <div class="search">
+      <div class="searchContent">
+        <label for="searchInput">キーワード検索：</label>
+        <input type="text" id="searchInput" placeholder="キーワードを入力">
+        <button id="searchButton">検索</button>
+        <button id="resetButton">検索結果リセット</button>
+      </div>
+    </div>
+    <div class="separator"></div>
+    <div class="sort">
+      <label for="sortSelect">並び替え：</label>
+      <select id="sortSelect">
+        <option value="newest">新しい順</option>
+        <option value="oldest">古い順</option>
+      </select>
+    </div>
     <div class="posts">
       <ul id="postList"></ul>
       <div id="paginationContainer">

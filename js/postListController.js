@@ -18,10 +18,11 @@ export class PostListController{
     );
     this.allPosts = this.postRepository.getAllPosts();
     this.currentPage = this.paginator.totalPages(this.allPosts);
+    this.sortOrder = "newest";
     this.refreshPostList(this.currentPage);
   }
 
-  addPostToList(key, userName, comment, postNum, time){
+  addPostToList(key, userName, comment, postNum, time, keyWord = ""){
     const li = document.createElement('li');
     const postContent = document.createElement('div');
     postContent.className = 'postContent';
@@ -29,9 +30,9 @@ export class PostListController{
     postText.className = 'postText';
 
     const spanTime = PostViewRenderer.createSpanTime(time);
-    const spanUsername = PostViewRenderer.createSpanUserName(userName);
+    const spanUsername = PostViewRenderer.createSpanUserName(userName, keyWord);
     const spanKey = PostViewRenderer.createSpanKey(postNum);
-    const spanComment = PostViewRenderer.createSpanComment(comment);
+    const spanComment = PostViewRenderer.createSpanComment(comment, keyWord);
     const editButton = PostViewRenderer.createEditButton(key);
     const deleteButton = PostViewRenderer.createDeleteButton(key);
   
@@ -49,24 +50,55 @@ export class PostListController{
 
   loadCurrentPagePosts(page){
     this.currentPage = page;
-    this.postList.innerHTML = "";
+    PostViewRenderer.clearInnerHTML(this.postList);
     const paginatedPosts = this.paginator.getCurrentPagePosts(page, this.allPosts);
     paginatedPosts.forEach( post => {
-      if(!post.updatedAt) {
-        post.updatedAt = "----/--/-- --:--:--";
-      }
-      if(!post.userName) {
-        post.userName = "名無し";
-      }
+      this.setDefaultPostValues(post);
       this.addPostToList(post.postKey, post.userName, post.comment, post.postNum, post.updatedAt);
     });
   }
 
   refreshPostList(page){
-    this.allPosts = this.postRepository.getAllPosts();
+    const posts = this.postRepository.getAllPosts();
+    this.allPosts = this.getSortedPosts(posts);
     this.currentPage = page;
     this.loadCurrentPagePosts(this.currentPage);
     this.paginator.updatePostPage(this.allPosts, this.currentPage);
-    PostViewRenderer.switchEnabledPostButton();
+    PostViewRenderer.switchEnabledButtons();
+  }
+
+  setSortOrder(order) {
+    this.sortOrder = order;
+  }
+
+  getSortedPosts(posts) {
+    return posts.sort((a, b) => {
+      const aHasDate = a.createdAt && a.createdAt !== "";
+      const bHasDate = b.createdAt && b.createdAt !== "";
+
+      if (!aHasDate && !bHasDate) {
+        return this.sortOrder === "oldest"
+          ? b.postNum - a.postNum
+          : a.postNum - b.postNum;
+      }
+      if (!aHasDate) return this.sortOrder === "oldest" ? 1 : -1;
+      if (!bHasDate) return this.sortOrder === "oldest" ? -1 : 1;
+
+      const aDate = new Date(a.createdAt);
+      const bDate = new Date(b.createdAt);
+  
+      return this.sortOrder === "oldest"
+        ? bDate - aDate
+        : aDate - bDate;
+    });
+  }
+
+  setDefaultPostValues(post){
+    if(!post.updatedAt) {
+      post.updatedAt = "----/--/-- --:--:--";
+    }
+    if(!post.userName) {
+      post.userName = "名無し";
+    }
   }
 }
