@@ -252,18 +252,22 @@ export class PostViewRenderer {
     postContent.replaceChild(cancelButton, postContent.querySelector(".deleteButton"));
   }
 
-  static switchTextMode(liElement) {
+  static switchTextMode(liElement, keyword = "") {
     const postContent = this.getPostContentElem(liElement);
     const postText = this.getPostTextElem(liElement);
-    
     const editUserName = this.getEditUserName(liElement);
     const editComment = this.getEditComment(liElement);
-    
+    const postKey = this.getPostKeyFromTarget(postContent.querySelector(".saveButton"));
+    const spanUsername = this.createSpanUserName(editUserName, keyword);
+    const spanComment = this.createSpanComment(editComment, keyword);
+    const editButton = this.createEditButton(postKey);
+    const deleteButton = this.createDeleteButton(postKey);
+
     postContent.removeChild(liElement.querySelector(".saveButton"));
     postContent.removeChild(liElement.querySelector(".cancelButton"));
 
-    const spanUsername = this.createSpanUserName(editUserName);
-    const spanComment = this.createSpanComment(editComment);
+    postContent.appendChild(editButton);
+    postContent.appendChild(deleteButton);
 
     postText.replaceChild(spanUsername, postText.querySelector(".editUserName"));
     postText.replaceChild(spanComment, postText.querySelector(".editCommentText"));
@@ -363,6 +367,20 @@ export class PostViewRenderer {
     this.switchEnabledPostButton();
     this.switchEnabledSearchButton();
     this.switchEnabledResetButton();
+  }
+
+  static switchEnabledAllButtons() {
+    const deleteButtons = this.getDeleteButtons();
+    const editButtons = this.getEditButtons();
+    deleteButtons.forEach(button => {
+      button.disabled = false;
+      button.classList.remove("disabled-button");
+    });
+    editButtons.forEach(button => {
+      button.disabled = false;
+      button.classList.remove("disabled-button");
+    });
+    this.switchEnabledButtons();
   }
 
   static highlightText(text, keyword) {

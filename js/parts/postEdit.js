@@ -37,12 +37,13 @@ export class PostEdit {
     if(!isValid) return;
 
     this.postRepository.updateComment(postKey, editUserName, editComment);
-    PostViewRenderer.switchTextMode(liElement);
+
     if(this.postSearch.isSearchMode){
-      this.postSearch.searchPosts();
-      PostViewRenderer.switchEnabledButtons();
+      PostViewRenderer.switchTextMode(liElement, this.postSearch.keyword);
+      PostViewRenderer.switchEnabledAllButtons();
       return;
     }
+    PostViewRenderer.switchTextMode(liElement);
     this.postListController.refreshPostList(this.postListController.currentPage);
   }
 

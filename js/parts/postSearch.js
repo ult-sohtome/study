@@ -10,14 +10,15 @@ export class PostSearch {
     this.resetButton = PostViewRenderer.getHtmlElem(htmlIds.resetButtonId);
     this.setupEventListeners();
     this.isSearchMode = false;
+    this.keyword = "";
   }
 
   searchPosts(){
-    const keyword = this.searchInput.value.trim();
+    this.keyword = this.searchInput.value.trim();
     const searchContent = PostViewRenderer.getSearchContent();
     PostViewRenderer.initErrorMessageIntoSearchElem();
     PostViewRenderer.addErrorMessageIntoSearch();
-    const postSearchValidation = PostSearchValidation.validateSearchKeyword(keyword);
+    const postSearchValidation = PostSearchValidation.validateSearchKeyword(this.keyword);
     if (!postSearchValidation.isValid) {
       PostViewRenderer.showErrorMessage(
         PostViewRenderer.getErrorCommentElem(searchContent),
@@ -28,7 +29,7 @@ export class PostSearch {
     const allPosts = this.postRepository.getAllPosts();
     const filteredPosts = allPosts.filter(post => {
       const userName = post.userName || "";
-      return userName.includes(keyword) || post.comment.includes(keyword)
+      return userName.includes(this.keyword) || post.comment.includes(this.keyword)
     });
 
     if(filteredPosts.length === 0) {
@@ -48,7 +49,7 @@ export class PostSearch {
         post.comment,
         post.postNum,
         post.updatedAt,
-        keyword
+        this.keyword
       );
     });
     PostViewRenderer.HiddenPagination();
