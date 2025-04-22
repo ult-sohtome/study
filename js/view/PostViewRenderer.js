@@ -227,6 +227,18 @@ export class PostViewRenderer {
     return document.querySelectorAll(".time");
   }
 
+  static getStyleModeSelectElem() {
+    return document.getElementById("modeSelect");
+  }
+
+  static switchDarkMode() {
+    document.documentElement.classList.add("dark");
+  }
+
+  static switchLightMode() {
+    document.documentElement.classList.remove("dark");
+  }
+
   static HiddenPagination() {
     const paiginationContainer = this.getPaginationContainer();
     paiginationContainer.style.display = "none";

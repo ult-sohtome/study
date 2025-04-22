@@ -319,6 +319,89 @@ mark {
   z-index: 1000;
 }
 
+input[type="text"]:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+  -webkit-text-fill-color: #000;
+}
+
+.mode {
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 10%;
+}
+
+#modeSelect {
+  appearance: menulist-button;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  line-height: 1.5;
+  padding: 3px;
+}
+
+html.dark body {
+  background-color: #121212;
+  color: white;
+}
+
+html.dark .editButton {
+  background: #6666ff;
+  color: #fff;
+}
+
+html.dark .saveButton {
+  background: #44aa55;
+  color: #fff;
+}
+
+html.dark .cancelButton {
+  background: #e6b800;
+  color: #fff;
+}
+
+html.dark .deleteButton {
+  background: #ff4d4d;
+  color: #fff;
+}
+
+html.dark #searchButton,
+html.dark #sortSelect,
+html.dark #resetButton,
+html.dark p,
+html.dark #modeSelect,
+html.dark input[type="text"],
+html.dark textarea,
+html.dark #username,
+html.dark #searchInput,
+html.dark .editUserName,
+html.dark .editCommentText {
+  background-color: #222 !important;
+  color: #fff !important;
+  border: 1px solid #555 !important;
+}
+
+html.dark .postContent {
+  background-color: #1e1e1e;
+}
+
+html.dark li {
+  background-color: #1c1c1c;
+  border-color: #444;
+}
+
+html.dark .error {
+  background-color: red !important;
+  border-radius: 0 !important;
+  border: none !important;
+}
+
+html.dark input[type="text"]:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #222 inset !important;
+  -webkit-text-fill-color: #fff !important;
+  transition: background-color 9999s ease-out, color 9999s ease-out;
+}
+
+
 @media screen and (max-width: 800px) {
   div {
     flex-direction: column;
