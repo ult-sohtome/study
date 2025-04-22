@@ -1,5 +1,6 @@
 import { PostSearchValidation } from "../validation/postSearchValidation.js";
 import { PostViewRenderer } from "../view/PostViewRenderer.js";
+import { UpdatedAtDisplay } from "./updatedAtDisplay.js";
 
 export class PostSearch {
   constructor(htmlIds, postRepository, postListController){
@@ -48,10 +49,11 @@ export class PostSearch {
         post.userName,
         post.comment,
         post.postNum,
-        post.updatedAt,
+        post.createdAt,
         this.keyword
       );
     });
+    UpdatedAtDisplay.setupEventListener(this.postRepository);
     PostViewRenderer.HiddenPagination();
   }
 

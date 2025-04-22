@@ -307,6 +307,18 @@ mark {
   font-weight: bold;
 }
 
+#customTooltip {
+  position: absolute;
+  background-color: white;
+  color: black;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  display: none;
+  pointer-events: none;
+  z-index: 1000;
+}
+
 @media screen and (max-width: 800px) {
   div {
     flex-direction: column;

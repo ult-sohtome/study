@@ -13,10 +13,11 @@ export class PostViewRenderer {
     return spanComment;
   }
 
-  static createSpanTime(time) {
+  static createSpanTime(time, postKey) {
     const spanTime = document.createElement("span");
     spanTime.className = "time";
     spanTime.textContent = `[${time}]`;
+    spanTime.setAttribute("data-key", postKey);
     return spanTime;
   }
 
@@ -220,6 +221,10 @@ export class PostViewRenderer {
 
   static getResetButton(){
     return document.getElementById("resetButton");
+  }
+
+  static getPostTimeElems() {
+    return document.querySelectorAll(".time");
   }
 
   static HiddenPagination() {

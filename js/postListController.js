@@ -1,4 +1,5 @@
 import { Paginator } from "./common/paginator.js";
+import { UpdatedAtDisplay } from "./parts/updatedAtDisplay.js";
 import { PostViewRenderer } from "./view/PostViewRenderer.js";
 
 export class PostListController{
@@ -22,19 +23,19 @@ export class PostListController{
     this.refreshPostList(this.currentPage);
   }
 
-  addPostToList(key, userName, comment, postNum, time, keyWord = ""){
+  addPostToList(postKey, userName, comment, postNum, time, keyWord = ""){
     const li = document.createElement('li');
     const postContent = document.createElement('div');
     postContent.className = 'postContent';
     const postText = document.createElement('div');
     postText.className = 'postText';
 
-    const spanTime = PostViewRenderer.createSpanTime(time);
+    const spanTime = PostViewRenderer.createSpanTime(time, postKey);
     const spanUsername = PostViewRenderer.createSpanUserName(userName, keyWord);
     const spanKey = PostViewRenderer.createSpanKey(postNum);
     const spanComment = PostViewRenderer.createSpanComment(comment, keyWord);
-    const editButton = PostViewRenderer.createEditButton(key);
-    const deleteButton = PostViewRenderer.createDeleteButton(key);
+    const editButton = PostViewRenderer.createEditButton(postKey);
+    const deleteButton = PostViewRenderer.createDeleteButton(postKey);
   
     postText.appendChild(spanTime);
     postText.appendChild(spanUsername);
@@ -54,7 +55,7 @@ export class PostListController{
     const paginatedPosts = this.paginator.getCurrentPagePosts(page, this.allPosts);
     paginatedPosts.forEach( post => {
       this.setDefaultPostValues(post);
-      this.addPostToList(post.postKey, post.userName, post.comment, post.postNum, post.updatedAt);
+      this.addPostToList(post.postKey, post.userName, post.comment, post.postNum, post.createdAt);
     });
   }
 
@@ -65,6 +66,7 @@ export class PostListController{
     this.loadCurrentPagePosts(this.currentPage);
     this.paginator.updatePostPage(this.allPosts, this.currentPage);
     PostViewRenderer.switchEnabledButtons();
+    UpdatedAtDisplay.setupEventListener(this.postRepository);
   }
 
   setSortOrder(order) {
@@ -94,8 +96,8 @@ export class PostListController{
   }
 
   setDefaultPostValues(post){
-    if(!post.updatedAt) {
-      post.updatedAt = "----/--/-- --:--:--";
+    if(!post.createdAt) {
+      post.createdAt = "----/--/-- --:--:--";
     }
     if(!post.userName) {
       post.userName = "名無し";
