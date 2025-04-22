@@ -1,10 +1,8 @@
 import { PostViewRenderer } from "../view/PostViewRenderer.js";
-import { PostRepository } from "../repositories/postRepository.js";
 
 export class UpdatedAtDisplay {
-  static setupEventListener(){
+  static setupEventListener(postRepository){
     const postTimeElems = PostViewRenderer.getPostTimeElems();
-    const postRepository = new PostRepository();
     const tooltip = document.getElementById("customTooltip");
 
     postTimeElems.forEach(elem => {

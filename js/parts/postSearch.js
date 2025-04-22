@@ -53,7 +53,7 @@ export class PostSearch {
         this.keyword
       );
     });
-    UpdatedAtDisplay.setupEventListener();
+    UpdatedAtDisplay.setupEventListener(this.postRepository);
     PostViewRenderer.HiddenPagination();
   }
 
