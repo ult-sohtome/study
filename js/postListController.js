@@ -54,7 +54,7 @@ export class PostListController{
     const paginatedPosts = this.paginator.getCurrentPagePosts(page, this.allPosts);
     paginatedPosts.forEach( post => {
       this.setDefaultPostValues(post);
-      this.addPostToList(post.postKey, post.userName, post.comment, post.postNum, post.updatedAt);
+      this.addPostToList(post.postKey, post.userName, post.comment, post.postNum, post.createdAt);
     });
   }
 
@@ -94,8 +94,8 @@ export class PostListController{
   }
 
   setDefaultPostValues(post){
-    if(!post.updatedAt) {
-      post.updatedAt = "----/--/-- --:--:--";
+    if(!post.createdAt) {
+      post.createdAt = "----/--/-- --:--:--";
     }
     if(!post.userName) {
       post.userName = "名無し";

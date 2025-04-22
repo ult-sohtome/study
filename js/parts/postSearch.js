@@ -48,7 +48,7 @@ export class PostSearch {
         post.userName,
         post.comment,
         post.postNum,
-        post.updatedAt,
+        post.createdAt,
         this.keyword
       );
     });
