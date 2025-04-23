@@ -7,6 +7,7 @@ import { UserNameRepository } from "./repositories/userNameRepository.js";
 import { runMigrations } from "./migration/runMigrations.js";
 import { PostSearch } from "./parts/postSearch.js";
 import { PostSort } from "./parts/postSort.js";
+import { StyleModeChange } from "./parts/styleModeChange.js";
 
 document.addEventListener("DOMContentLoaded", ()=>{
   const htmlIds = {
@@ -31,6 +32,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   new PostDelete(postRepository, postListController, postSearch);
   new PostEdit(postRepository, postListController, postSearch);
   new PostSort(postRepository, postListController, postSearch);
+  new StyleModeChange(postRepository);
 
   if(userNameRepository.hasUserName()){
     postCreate.userName.value = userNameRepository.getUserName();

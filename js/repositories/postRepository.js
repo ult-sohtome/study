@@ -4,7 +4,10 @@ export class PostRepository {
   constructor(){
     this.#config = Object.freeze({
       counterKey: "comment_counter",
-      commentPrefix: "comment_num_"
+      commentPrefix: "comment_num_",
+      modeSelectKey: "styleMode",
+      darkMode: "dark",
+      lightMode: "light"
     });
   }
   
@@ -107,5 +110,25 @@ export class PostRepository {
       updatedAt: new Date().toISOString()
     };
     localStorage.setItem(postKey, JSON.stringify(commentData));
+  }
+
+  setSelectedMode(mode){
+    localStorage.setItem(this.#config.modeSelectKey, mode);
+  }
+
+  getSelectedMode(){
+    return localStorage.getItem(this.#config.modeSelectKey) || this.#config.lightMode;
+  }
+
+  isDarkMode(){
+    return this.getSelectedMode() === this.#config.darkMode;
+  }
+
+  getLightMode(){
+    return this.#config.lightMode;
+  }
+
+  getDarkMode(){
+    return this.#config.darkMode;
   }
 }
