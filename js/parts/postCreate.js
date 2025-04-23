@@ -52,6 +52,7 @@ export class PostCreate {
 
   setupEventListeners(){
     this.postButton.addEventListener("click", () => {
+      PostViewRenderer.ShowPagination();
       this.createComment();
     });
   }

@@ -58,6 +58,10 @@ export class Paginator {
     this.currentPage = page;
     this.updatePageBtnUI(page);
   }
+  
+  updateRefreshFunction(newRefreshPostList){
+    this.refreshPostList = newRefreshPostList;
+  }
 
   setupEventListeners(){
     this.pagination.addEventListener("click", e => {

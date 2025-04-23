@@ -16,7 +16,7 @@ export class PostDelete {
       this.postRepository.clearCounter();
     }
     if(this.postSearch.isSearchMode){
-      this.postSearch.searchPosts();
+      this.postSearch.refreshSearchedPosts(this.postSearch.currentSearchPostsPage);
       return;
     }
     this.postListController.allPosts = this.postRepository.getAllPosts();
