@@ -4,12 +4,12 @@ import { PostViewRenderer } from "./view/PostViewRenderer.js";
 
 export class PostListController{
   constructor(htmlIds, postRepository){
-    this.postList = document.getElementById(htmlIds.postListId);
+    this.postList = PostViewRenderer.getHtmlElem(htmlIds.postListId);
     this.postRepository = postRepository;
 
-    const prevButton = document.getElementById(htmlIds.prevButtonId);
-    const pagination = document.getElementById(htmlIds.paginateId);
-    const nextButton = document.getElementById(htmlIds.nextButtonId);
+    const prevButton = PostViewRenderer.getHtmlElem(htmlIds.prevButtonId);
+    const pagination = PostViewRenderer.getHtmlElem(htmlIds.paginateId);
+    const nextButton = PostViewRenderer.getHtmlElem(htmlIds.nextButtonId);
 
     this.paginator = new Paginator(
       prevButton,
@@ -24,11 +24,9 @@ export class PostListController{
   }
 
   addPostToList(postKey, userName, comment, postNum, time, keyWord = ""){
-    const li = document.createElement('li');
-    const postContent = document.createElement('div');
-    postContent.className = 'postContent';
-    const postText = document.createElement('div');
-    postText.className = 'postText';
+    const li = PostViewRenderer.createLiElem();
+    const postContent = PostViewRenderer.createPostContentElem();
+    const postText = PostViewRenderer.createPostTextElem();
 
     const spanTime = PostViewRenderer.createSpanTime(time, postKey);
     const spanUsername = PostViewRenderer.createSpanUserName(userName, keyWord);

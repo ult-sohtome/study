@@ -50,6 +50,18 @@ export class PostViewRenderer {
     return document.createElement('div');
   }
 
+  static createPostContentElem() {
+    const postContent = this.createDivElem();
+    postContent.className = 'postContent';
+    return postContent;
+  }
+
+  static createPostTextElem() {
+    const postText = this.createDivElem();
+    postText.className = 'postText';
+    return postText;
+  }
+
   static createEditButton(postKey) {
     const editButton = document.createElement("button");
     editButton.type = "button";
@@ -86,14 +98,14 @@ export class PostViewRenderer {
   static createErrorNameMessage() {
     const errorName = document.createElement("p");
     errorName.classList.add("error", "errorUpdateName");
-    errorName.style.display = "none";
+    this.hiddenElem(errorName);
     return errorName;
   }
 
   static createErrorCommentMessage() {
     const errorComment = document.createElement("p");
     errorComment.classList.add("error", "errorUpdateComment");
-    errorComment.style.display = "none";
+    this.hiddenElem(errorComment);
     return errorComment;
   }
 
@@ -136,8 +148,8 @@ export class PostViewRenderer {
     const errorCommentElem = this.getErrorCommentElem(liElement);
     errorNameElem.textContent = "";
     errorCommentElem.textContent = "";
-    errorNameElem.style.display = "none";
-    errorCommentElem.style.display = "none";
+    this.hiddenElem(errorNameElem);
+    this.hiddenElem(errorCommentElem);
   }
 
   static initErrorMessageIntoSearchElem() {
@@ -241,12 +253,26 @@ export class PostViewRenderer {
 
   static HiddenPagination() {
     const paiginationContainer = this.getPaginationContainer();
-    paiginationContainer.style.display = "none";
+    this.hiddenElem(paiginationContainer);
   }
 
   static ShowPagination() {
     const paiginationContainer = this.getPaginationContainer();
     paiginationContainer.style.display = "";
+  }
+
+  static showUpdatedAtTooltip(tooltip, updatedAt){
+    tooltip.textContent = `最終更新日時: ${updatedAt}`;
+    tooltip.style.display = "block";
+  }
+
+  static moveTooltip(tooltip, e) {
+    tooltip.style.left = `${e.pageX + 10}px`;
+    tooltip.style.top = `${e.pageY + 10}px`;
+  }
+
+  static hiddenElem(elem) {
+    elem.style.display = "none";
   }
 
   static switchEditMode(postKey, liElement) {
