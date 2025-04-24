@@ -72,6 +72,7 @@ export class PostSearch {
 
   setupEventListeners(){
     this.searchButton.addEventListener("click", () => {
+      this.currentSearchPostsPage = 1;
       this.searchPosts();
     });
     this.resetButton.addEventListener("click", () => {
