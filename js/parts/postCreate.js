@@ -13,6 +13,7 @@ export class PostCreate {
   }
 
   createComment(){
+    PostViewRenderer.clearSearchInput();
     const comment = this.commentInput.value.trim();
     const userName = this.userName.value.trim();
     PostViewRenderer.addErrorMessageIntoCreatePost();
@@ -47,11 +48,13 @@ export class PostCreate {
     this.postListController.allPosts = this.postRepository.getAllPosts();
     const totalPages = this.postListController.paginator.totalPages(this.postListController.allPosts);
     this.postListController.refreshPostList(totalPages);
+    this.postListController.paginator.updateRefreshFunction(page => this.postListController.refreshPostList(page));
     PostViewRenderer.clearValueElem(this.commentInput);
   }
 
   setupEventListeners(){
     this.postButton.addEventListener("click", () => {
+      PostViewRenderer.ShowPagination();
       this.createComment();
     });
   }

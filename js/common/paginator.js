@@ -1,9 +1,9 @@
 export class Paginator {
-  constructor(prevButton, pagination, nextButton, refreshPostList){
+  constructor(prevButton, pagination, nextButton, refreshPostFunction){
     this.prevButton = prevButton;
     this.pagination = pagination;
     this.nextButton = nextButton;
-    this.refreshPostList = refreshPostList;
+    this.refreshPostFunction = refreshPostFunction;
     this.allPosts = [];
 
     this.ITEM_PER_PAGE = Object.freeze(5);
@@ -58,24 +58,28 @@ export class Paginator {
     this.currentPage = page;
     this.updatePageBtnUI(page);
   }
+  
+  updateRefreshFunction(newRefreshPostFunction){
+    this.refreshPostFunction = newRefreshPostFunction;
+  }
 
   setupEventListeners(){
     this.pagination.addEventListener("click", e => {
       if(e.target.tagName !== "BUTTON") return;
       const selectedPage = parseInt(e.target.textContent);
-      this.refreshPostList(selectedPage);
+      this.refreshPostFunction(selectedPage);
     });
 
     this.prevButton.addEventListener("click", () => {
       if(this.currentPage > 1){
-        this.refreshPostList(this.currentPage - 1);
+        this.refreshPostFunction(this.currentPage - 1);
       }
     });
   
     this.nextButton.addEventListener("click", () => {
       const totalPages = this.totalPages(this.allPosts);
       if(this.currentPage < totalPages){
-        this.refreshPostList(this.currentPage + 1);
+        this.refreshPostFunction(this.currentPage + 1);
       }
     });
   }

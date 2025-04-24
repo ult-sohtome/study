@@ -231,6 +231,10 @@ export class PostViewRenderer {
     return document.getElementById("searchButton");
   }
 
+  static getSearchInputElem() {
+    return document.getElementById("searchInput");
+  }
+
   static getResetButton(){
     return document.getElementById("resetButton");
   }
@@ -438,5 +442,10 @@ export class PostViewRenderer {
 
   static clearInnerHTML(elem) {
     elem.innerHTML = "";
+  }
+
+  static clearSearchInput() {
+    const searchInput = this.getSearchInputElem();
+    this.clearValueElem(searchInput);
   }
 }

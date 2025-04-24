@@ -69,7 +69,7 @@ export class PostEdit {
       }
       if(PostViewRenderer.isCancelButton(target)) {
         if(this.postSearch.isSearchMode){
-          this.postSearch.searchPosts();
+          this.postSearch.refreshSearchedPosts(this.postSearch.currentSearchPostsPage);
           PostViewRenderer.switchEnabledButtons();
           return;
         }
