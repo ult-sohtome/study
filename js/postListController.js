@@ -7,14 +7,14 @@ export class PostListController{
     this.postList = PostViewRenderer.getHtmlElem(htmlIds.postListId);
     this.postRepository = postRepository;
 
-    this.prevButton = PostViewRenderer.getHtmlElem(htmlIds.prevButtonId);
-    this.pagination = PostViewRenderer.getHtmlElem(htmlIds.paginateId);
-    this.nextButton = PostViewRenderer.getHtmlElem(htmlIds.nextButtonId);
+    const prevButton = PostViewRenderer.getHtmlElem(htmlIds.prevButtonId);
+    const pagination = PostViewRenderer.getHtmlElem(htmlIds.paginateId);
+    const nextButton = PostViewRenderer.getHtmlElem(htmlIds.nextButtonId);
 
     this.paginator = new Paginator(
-      this.prevButton,
-      this.pagination,
-      this.nextButton,
+      prevButton,
+      pagination,
+      nextButton,
       page => this.refreshPostList(page)
     );
     this.allPosts = this.postRepository.getAllPosts();
