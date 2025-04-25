@@ -173,6 +173,11 @@ export class PostViewRenderer {
     return document.getElementById("sortSelect");
   }
 
+  static switchToNewest() {
+    const sortSelect = this.getSortSeletectElem();
+    sortSelect.value = "newest";
+  }
+
   static getSearchContent() {
     return document.querySelector(".search");
   }
