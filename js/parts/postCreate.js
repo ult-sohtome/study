@@ -45,9 +45,9 @@ export class PostCreate {
       this.userNameRepository.setUserName(userName);
     }
     this.postRepository.addComment(comment, userName);
-    this.postListController.allPosts = this.postRepository.getAllPosts();
-    const totalPages = this.postListController.paginator.totalPages(this.postListController.allPosts);
-    this.postListController.refreshPostList(totalPages);
+    this.postListController.setSortOrder("newest");
+    PostViewRenderer.switchToNewest();
+    this.postListController.refreshPostList(1);
     this.postListController.paginator.updateRefreshFunction(page => this.postListController.refreshPostList(page));
     PostViewRenderer.clearValueElem(this.commentInput);
   }

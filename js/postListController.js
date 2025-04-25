@@ -18,7 +18,7 @@ export class PostListController{
       page => this.refreshPostList(page)
     );
     this.allPosts = this.postRepository.getAllPosts();
-    this.currentPage = this.paginator.totalPages(this.allPosts);
+    this.currentPage = 1;
     this.sortOrder = "newest";
     this.refreshPostList(this.currentPage);
   }
@@ -43,8 +43,7 @@ export class PostListController{
     postContent.appendChild(editButton);
     postContent.appendChild(deleteButton);
     li.appendChild(postContent);
-  
-    this.postList.insertBefore(li, this.postList.firstChild);
+    this.postList.appendChild(li);
   }
 
   loadCurrentPagePosts(page){
@@ -78,18 +77,18 @@ export class PostListController{
 
       if (!aHasDate && !bHasDate) {
         return this.sortOrder === "oldest"
-          ? b.postNum - a.postNum
-          : a.postNum - b.postNum;
+          ? a.postNum - b.postNum
+          : b.postNum - a.postNum;
       }
-      if (!aHasDate) return this.sortOrder === "oldest" ? 1 : -1;
-      if (!bHasDate) return this.sortOrder === "oldest" ? -1 : 1;
+      if (!aHasDate) return this.sortOrder === "oldest" ? -1 : 1;
+      if (!bHasDate) return this.sortOrder === "oldest" ? 1 : -1;
 
       const aDate = new Date(a.createdAt);
       const bDate = new Date(b.createdAt);
   
       return this.sortOrder === "oldest"
-        ? bDate - aDate
-        : aDate - bDate;
+        ? aDate - bDate
+        : bDate - aDate;
     });
   }
 
