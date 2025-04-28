@@ -10,6 +10,12 @@ export class PostValidation {
   }
 
   static validateCreateComment(comment) {
+    if (typeof comment !== "string") {
+      return {
+        isValid: false,
+        errorMessage: "コメントを入力してください。"
+      };
+    }
     if (!comment) {
       return {
         isValid: false,
