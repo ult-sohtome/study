@@ -2,7 +2,7 @@ import { PostValidation } from "../validation/postValidation.js";
 
 const expect = chai.expect;
 
-describe("PostValidation", () => {
+describe("CommentValidation", () => {
   const testCases = [
     {
       description: "コメントが空だと無効",
@@ -39,6 +39,41 @@ describe("PostValidation", () => {
   testCases.forEach(({ description, input, expected }) => {
     it(description, () => {
       const result = PostValidation.validateCreateComment(input);
+      expect(result.isValid).to.equal(expected.isValid);
+      if (expected.errorMessage) {
+        expect(result.errorMessage).to.equal(expected.errorMessage);
+      }
+    });
+  });
+});
+
+describe("UserNameValidation", () => {
+  const testCases = [
+    {
+      description: "ニックネームが20文字を超えると無効",
+      input: String("あ").repeat(21),
+      expected: { isValid: false, errorMessage: "20文字以内でニックネームを入力してください。" }
+    },
+    {
+      description: "ニックネームが1文字は有効",
+      input: "a",
+      expected: { isValid: true }
+    },
+    {
+      description: "ニックネームが20文字は有効",
+      input: "😊".repeat(20),
+      expected: { isValid: true }
+    },
+    {
+      description: "ニックネームが空は有効",
+      input: "",
+      expected: { isValid: true }
+    }
+  ];
+
+  testCases.forEach(({ description, input, expected }) => {
+    it(description, () => {
+      const result = PostValidation.validateUserName(input);
       expect(result.isValid).to.equal(expected.isValid);
       if (expected.errorMessage) {
         expect(result.errorMessage).to.equal(expected.errorMessage);
