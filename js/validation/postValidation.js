@@ -1,5 +1,11 @@
 export class PostValidation {
   static validateUserName(userName) {
+    if (typeof userName !== "string") {
+      return {
+        isValid: false,
+        errorMessage: "不正な値が入力されました。"
+      };
+    }
     if(Array.from(userName).length > 20){
       return {
         isValid: false,
@@ -13,7 +19,7 @@ export class PostValidation {
     if (typeof comment !== "string") {
       return {
         isValid: false,
-        errorMessage: "コメントを入力してください。"
+        errorMessage: "不正な値が入力されました。"
       };
     }
     if (!comment) {
